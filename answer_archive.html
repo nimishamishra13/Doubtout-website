@@ -5,6 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoubtOut</title>
 </head>
+<style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e6f0ed; /* soft background for full page */
+    }
+
+    header {
+      background-color: #0d7368; /* teal-green header like in image */
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    header img {
+      height: 90px;
+    }
+
+    /* Navigation bar */
+    nav {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #0d7368;
+      font-size: 22px;
+      margin: 0 25px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main section */
+    section {
+      text-align: center;
+      padding: 20px;
+    }
+</style>
+
 <body>
     <header>
         <div class="logo container" style="text-align: center;">
@@ -22,8 +66,12 @@
     <br>
     <form action="/verified_answers.txt" style="text-align: center;">
         <input type="search" placeholder="🔍Search verified questions" size="100">
+        <br>
+        <br>
         <button type="submit">Submit</button><br>
+        <br>
         <label for="subject">Select subject of your doubt:</label><br>
+        <br>
         <select id="subject" name="subject">
             <option value="maths">Mathematics</option>
             <option value="c programming">C Programming</option>
