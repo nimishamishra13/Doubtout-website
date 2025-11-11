@@ -1,155 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Ask a Doubt</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubtout - Ask a Doubt</title>
+    <!-- Load Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import and general base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Lighter, warmer background, consistent with other pages */
+            background-color: #f0f8ff; 
+        }
+
+        /* Custom style for layered, high-contrast borders on main cards */
+        .hand-drawn-card {
+            border: 4px solid #1f2937; /* Strong, dark border */
+            box-shadow: 8px 8px 0px 0px rgba(31, 41, 55, 0.4); /* Offset shadow for 3D effect */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .hand-drawn-card:hover {
+            box-shadow: 10px 10px 0px 0px rgba(31, 41, 55, 0.5); 
+        }
+
+        /* Bubbly CTA Button Styling (using blue accents) */
+        .cta-button-blue {
+            transition: all 0.15s ease-in-out;
+            border-bottom: 4px solid rgba(0, 0, 0, 0.2); /* Creates a 'pressed' look */
+        }
+        .cta-button-blue:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+            box-shadow: none;
+        }
+
+        /* Styling for the form inputs and selects */
+        .form-input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        .form-input-field:focus {
+            outline: none;
+            border-color: #3b82f6; /* Blue 500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+    </style>
 </head>
-<style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #e6f0ed; /* soft background for full page */
-    }
-
-    header {
-      background-color: #0d7368; /* teal-green header like in image */
-      color: white;
-      padding: 10px 0;
-      text-align: center;
-    }
-
-    header img {
-      height: 90px;
-    }
-
-    /* Navigation bar */
-    nav {
-      background-color: #f8f9fa;
-      text-align: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #ccc;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: #0d7368;
-      font-size: 22px;
-      margin: 0 25px;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    /* Main section */
-    section {
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
 <body>
-  <header>
-        <div class="logo container" style="text-align: center;">
-            <img src="/proj_logo.jpg" alt="DoubtOut logo" height=90px>
-            <h2>DoubtOut</h2>
+
+    <!-- Main Header (Dark theme with Blue Accent) -->
+    <header class="bg-gray-900 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                
+                <!-- Logo Block (Blue Accent) -->
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span class="text-xl font-bold tracking-tight text-blue-400">doubtout</span>
+                </div>
+
+                <!-- Global Navigation Links -->
+                <nav class="hidden md:flex space-x-4">
+                    <a href="/home.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Home</a>
+                    <a href="/answer_archive.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Answer Archive</a>
+                    <a href="/ask_a_doubt.html" class="px-3 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out">Ask a Doubt</a>
+                    <a href="/login.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Login / Sign Up</a>
+                </nav>
+            </div>
         </div>
     </header>
+    
+    <!-- Sub-Navigation / Dashboard Links (Below Header) -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
+            <a href="student_dashboard.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Dasboard</a>
+            <a href="#questions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Questions</a>
+            <a href="#contributions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
+            <a href="doubts.html" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">Ask a Doubt</a>
+            <a href="#bookmarks" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Bookmarks</a>
+            <a href="practice_session.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Practice Sessions</a>
+        </div>
+    </nav>
 
-  <!-- Centered Heading -->
-  <table width="100%">
-    <tr>
-      <td align="center">
-        <h1><u>Ask a Doubt</u></h1>
-      </td>
-    </tr>
-  </table>
-  <p style="text-align: center; font-size: 25px;">
-    <a href="#questions" style="margin-right:30px;">My Questions</a>
-    <a href="#contributions" style="margin-right:30px;">My Contributions</a>
-    <a href="doubts.html" style="margin-right:30px;">Ask a Doubt</a>
-    <a href="#bookmarks" style="margin-right:30px;">Bookmarks</a>
-    <a href="practice_session.html" style="margin-right:30px;">Practice Sessions</a>
-  </p>
 
-  <form style="text-align: center; color:rgb(0, 0, 0);background-color: #0d7368;">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex justify-center">
+        
+        <!-- Main Form Card (Hand-drawn style) -->
+        <div class="w-full max-w-2xl p-8 bg-white rounded-xl hand-drawn-card">
+            <h1 class="text-3xl font-extrabold text-gray-800 text-center mb-6 border-b-2 border-blue-500 pb-2">
+                Ask a Doubt
+            </h1>
+            <p class="text-center text-gray-600 mb-8">
+                Select the course details and type your question below.
+            </p>
 
-    <!-- Branch Selection -->
-    <label for="branch" style="color: w;">Select Branch:</label><br>
-    <select id="branch" name="branch">
-      <option value="">--Select Branch--</option>
-      <option value="civil">Civil Engineering</option>
-      <option value="mech">Mechanical Engineering</option>
-      <option value="eee">Electrical and Electronics Engineering</option>
-      <option value="ece">Electronics and Communication Engineering</option>
-      <option value="iem">Industrial Engineering and Management</option>
-      <option value="cse">Computer Science and Engineering</option>
-      <option value="ete">Electronics and Telecommunication Engineering</option>
-      <option value="ise">Information Science and Engineering</option>
-      <option value="eie">Electronics and Instrumentation Engineering</option>
-      <option value="mee">Medical Electronics Engineering</option>
-      <option value="che">Chemical Engineering</option>
-      <option value="bt">Bio-Technology</option>
-      <option value="mca">Computer Applications (MCA)</option>
-      <option value="msrc">Management Studies and Research Centre</option>
-      <option value="math">Mathematics Department</option>
-      <option value="phy">Physics Department</option>
-      <option value="chem">Chemistry Department</option>
-      <option value="aero">Aerospace Engineering</option>
-      <option value="ml">Machine Learning (AI and ML)</option>
-      <option value="csds">Computer Science and Engineering (DS)</option>
-      <option value="csiot">Computer Science and Engineering (IoT and CS)</option>
-      <option value="aid">Artificial Intelligence and Data Science</option>
-      <option value="csbs">Computer Science and Business Systems</option>
-    </select>
-    <br><br>
+            <form id="doubt-form" class="space-y-6">
 
-    <!-- Semester Selection -->
-    <label for="semester">Select Semester:</label><br>
-    <select id="semester" name="semester">
-      <option value="">--Select Semester--</option>
-      <option value="1">Semester 1</option>
-      <option value="2">Semester 2</option>
-      <option value="3">Semester 3</option>
-      <option value="4">Semester 4</option>
-      <option value="5">Semester 5</option>
-      <option value="6">Semester 6</option>
-      <option value="7">Semester 7</option>
-      <option value="8">Semester 8</option>
-    </select>
-    <br><br>
+                <!-- Academic Details (Grid Layout for better flow) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Branch Selection -->
+                    <div>
+                        <label for="branch" class="block text-sm font-medium text-gray-700 mb-2">Select Branch:</label>
+                        <select id="branch" name="branch" required class="form-input-field">
+                            <option value="" disabled selected>--Select Branch--</option>
+                            <option value="civil">Civil Engineering</option>
+                            <option value="mech">Mechanical Engineering</option>
+                            <option value="eee">Electrical and Electronics Engineering</option>
+                            <option value="ece">Electronics and Communication Engineering</option>
+                            <option value="iem">Industrial Engineering and Management</option>
+                            <option value="cse">Computer Science and Engineering</option>
+                            <option value="ete">Electronics and Telecommunication Engineering</option>
+                            <option value="ise">Information Science and Engineering</option>
+                            <option value="eie">Electronics and Instrumentation Engineering</option>
+                            <option value="mee">Medical Electronics Engineering</option>
+                            <option value="che">Chemical Engineering</option>
+                            <option value="bt">Bio-Technology</option>
+                            <option value="mca">Computer Applications (MCA)</option>
+                            <option value="msrc">Management Studies and Research Centre</option>
+                            <option value="math">Mathematics Department</option>
+                            <option value="phy">Physics Department</option>
+                            <option value="chem">Chemistry Department</option>
+                            <option value="aero">Aerospace Engineering</option>
+                            <option value="ml">Machine Learning (AI and ML)</option>
+                            <option value="csds">Computer Science and Engineering (DS)</option>
+                            <option value="csiot">Computer Science and Engineering (IoT and CS)</option>
+                            <option value="aid">Artificial Intelligence and Data Science</option>
+                            <option value="csbs">Computer Science and Business Systems</option>
+                        </select>
+                    </div>
 
-    <!-- Course Selection -->
-    <label for="course">Select Course:</label><br>
-    <select id="course" name="course">
-      <option value="">--Select Course--</option>
-      <option value="maths">Mathematics</option>
-      <option value="dsa">Data Structures</option>
-      <option value="os">Operating Systems</option>
-      <option value="networks">Computer Networks</option>
-    </select>
-    <br><br>
+                    <!-- Semester Selection -->
+                    <div>
+                        <label for="semester" class="block text-sm font-medium text-gray-700 mb-2">Select Semester:</label>
+                        <select id="semester" name="semester" required class="form-input-field">
+                            <option value="" disabled selected>--Select Semester--</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
 
-    <!-- Write Question -->
-    <label for="question">Your Question:</label><br>
-    <textarea id="question" name="question" rows="5" cols="40" placeholder="Type your question here..."></textarea>
-    <br><br>
+                    <!-- Course Selection -->
+                    <div>
+                        <label for="course" class="block text-sm font-medium text-gray-700 mb-2">Select Course:</label>
+                        <select id="course" name="course" required class="form-input-field">
+                            <option value="" disabled selected>--Select Course--</option>
+                            <option value="maths">Mathematics</option>
+                            <option value="dsa">Data Structures</option>
+                            <option value="os">Operating Systems</option>
+                            <option value="networks">Computer Networks</option>
+                        </select>
+                    </div>
+                </div>
 
-    <!-- Mention Professor -->
-    <label for="professor">Mention Professor:</label><br>
-    <select id="professor" name="professor">
-      <option value="">--Select Professor--</option>
-      <option value="prof_a">Prof. A. Sharma</option>
-      <option value="prof_b">Prof. B. Verma</option>
-      <option value="prof_c">Prof. C. Iyer</option>
-      <option value="prof_d">Prof. D. Nair</option>
-      <option value="prof_e">Prof. E. Khan</option>
-    </select>
-    <br><br>
+                <!-- Question Text Area -->
+                <div>
+                    <label for="question" class="block text-sm font-medium text-gray-700 mb-2">Your Question:</label>
+                    <textarea id="question" name="question" rows="5" placeholder="Type your question clearly and precisely here... Add #your_topic_name at the end" required
+                              class="form-input-field resize-y"></textarea>
+                </div>
 
-    <!-- Submit Button -->
-    <input type="submit" value="Submit Your Doubt" style="background-color:white; color: black;">
+                <!-- Mention Professor -->
+                <div>
+                    <label for="professor" class="block text-sm font-medium text-gray-700 mb-2">Mention Professor (Optional):</label>
+                    <select id="professor" name="professor" class="form-input-field">
+                        <option value="" selected>--Select Professor--</option>
+                        <option value="prof_a">Prof. A. Sharma</option>
+                        <option value="prof_b">Prof. B. Verma</option>
+                        <option value="prof_c">Prof. C. Iyer</option>
+                        <option value="prof_d">Prof. D. Nair</option>
+                        <option value="prof_e">Prof. E. Khan</option>
+                    </select>
+                </div>
 
-  </form>
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" 
+                            class="cta-button-blue w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold shadow-lg transition duration-200">
+                        Submit Your Doubt
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
 
+    
+    <!-- JavaScript for Mock Form Submission -->
+    <script>
+        /**
+         * Handles the form submission, simulates an API call, and shows a success message.
+         */
+        document.getElementById('doubt-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Collect selected values for confirmation message
+            const branchText = document.getElementById('branch').options[document.getElementById('branch').selectedIndex].text;
+            const semesterText = document.getElementById('semester').options[document.getElementById('semester').selectedIndex].text;
+            const questionValue = document.getElementById('question').value.trim();
+
+            if (!branchText.startsWith('--') && !semesterText.startsWith('--') && questionValue.length > 10) {
+                
+                // Replace the form content with a success message (custom message box)
+                const formContainer = document.querySelector('.w-full.max-w-2xl');
+                
+                // Construct a summary for the user
+                const summary = `
+                    Your doubt in **${branchText} - ${semesterText}** has been successfully submitted for review. 
+                    <br>You will be notified once a student or faculty member responds!
+                `;
+
+                formContainer.innerHTML = `
+                    <div class="p-8 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-green-500 mb-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-3">Doubt Submitted!</h3>
+                        <p class="text-gray-600 mt-2">${summary}</p>
+                        <a href="student-dashboard.html" class="cta-button-blue inline-block mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg font-bold">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                `;
+
+            } else {
+                // In a real app, this would show an inline error message on the form.
+                // Using console.error as an alternative to the forbidden alert()
+                console.error("Please ensure all required fields are selected and your question is detailed.");
+                
+                // Simple visual feedback for the user
+                const submitButton = event.target.querySelector('button[type="submit"]');
+                submitButton.textContent = "Please Complete Form!";
+                submitButton.classList.add('bg-red-500', 'hover:bg-red-600');
+                
+                setTimeout(() => {
+                    submitButton.textContent = "Submit Your Doubt";
+                    submitButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+                    submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                }, 2000);
+            }
+        });
+    </script>
 </body>
 </html>
