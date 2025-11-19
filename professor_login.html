@@ -80,12 +80,13 @@
                 
                 <div>
                     <label for="faculty-id" class="block text-sm font-medium text-gray-300 mb-1">
-                        Faculty ID or College Email
+                        College Email
                     </label>
-                    <input type="text" id="faculty-id" name="facultyId" required 
-                           placeholder="e.g., P987654 or dr.smith@college.edu"
+                    <!-- IMPORTANT: We use the email for API authentication -->
+                    <input type="email" id="faculty-id" name="email" required 
+                           placeholder="e.g., dr.smith@college.edu"
                            class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150"
-                           aria-label="Faculty ID or Email">
+                           aria-label="College Email">
                 </div>
 
                 <div>
@@ -98,19 +99,14 @@
                            aria-label="Password">
                 </div>
 
-                <!-- Submit Button (Changed color to green) -->
-                <button type="submit" class="cta-button w-full bg-green-500 hover:bg-green-600 text-gray-900 shadow-md py-4 rounded-lg font-extrabold text-lg tracking-wide transition duration-200">
+                <button type="submit" id="login-submit-btn" class="cta-button w-full bg-green-500 hover:bg-green-600 text-gray-900 shadow-md py-4 rounded-lg font-extrabold text-lg tracking-wide transition duration-200">
                     Login to Portal
                 </button>
             </form>
 
             <div class="mt-6 text-center text-sm">
-                <a href="#" class="text-gray-400 hover:text-green-400 font-semibold transition duration-150">
-                    Forgot Password?
-                </a>
-                <span class="text-gray-600 mx-2">|</span>
-                <a href="login.html" class="text-gray-400 hover:text-orange-400 font-semibold transition duration-150">
-                    Student Login
+                 <a href="login1.html" class="text-gray-400 hover:text-green-400 font-semibold transition duration-150">
+                    Back to Role Select
                 </a>
             </div>
         </section>
@@ -118,14 +114,23 @@
     </main>
 
     <script>
-        // --- Custom Modal (Reuses the same function from student login) ---
+        const API_URL = 'http://localhost:3000/api'; 
+        const form = document.getElementById('professor-login-form');
+        const submitButton = document.getElementById('login-submit-btn');
+
+        /**
+         * Generic function to show a modal message.
+         * @param {string} title 
+         * @param {string} message 
+         * @param {string} type - 'info', 'error', or 'success'
+         */
         function showMessage(title, message, type = 'info') {
             const container = document.createElement('div');
             container.className = 'fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-70 transition-opacity duration-300';
             
             let color = 'bg-blue-500';
             if (type === 'error') color = 'bg-red-500';
-            if (type === 'success') color = 'bg-green-500'; // Success color matches green theme
+            if (type === 'success') color = 'bg-green-500'; 
 
             container.innerHTML = `
                 <div class="bg-white rounded-xl hand-drawn-card p-6 w-11/12 max-w-sm transform transition-transform duration-300 scale-100">
@@ -141,49 +146,73 @@
             `;
             document.body.appendChild(container);
         }
+        
+        /**
+         * Toggles the loading state of the submit button.
+         * @param {boolean} isLoading 
+         */
+        function toggleLoading(isLoading) {
+            submitButton.disabled = isLoading;
+            submitButton.innerHTML = isLoading 
+                ? '<span class="animate-spin inline-block w-5 h-5 border-4 border-white border-t-transparent rounded-full mr-2"></span> Logging In...'
+                : 'Login to Portal';
+            submitButton.classList.toggle('opacity-50', isLoading);
+        }
 
-        // --- Professor Login Form Submission Handler ---
-        document.getElementById('professor-login-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); 
 
-            const facultyId = document.getElementById('faculty-id').value.trim();
+            // We treat the faculty-id input as the email for authentication purposes.
+            const email = document.getElementById('faculty-id').value.trim();
             const password = document.getElementById('password').value;
+            const role = 'professor'; // Hardcode the role for this login page
 
-            // Simple client-side validation
-            if (facultyId === "" || password === "") {
-                showMessage("Input Error", "Please enter both your Faculty ID/Email and Password.", 'error');
+            if (email === "" || password === "") {
+                showMessage("Input Error", "Please enter both your College Email and Password.", 'error');
                 return;
             }
+            
+            toggleLoading(true);
 
-            // Show processing message
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password, role }),
+                });
 
-            // Simulate network delay and server response
-            setTimeout(() => {
-                // Remove the current message container
-                const messageContainer = document.querySelector('.fixed.inset-0.z-50');
-                if (messageContainer) {
-                    messageContainer.remove();
-                }
-
-                // Mock Credentials: P987654 and password 'prof123'
-                if (facultyId.toLowerCase().includes('p987654') && password === 'prof123') {
+                if (response.ok) {
+                    const data = await response.json();
                     
-                    const targetPage = 'professor_dashboard.html'; 
+                    // Store user data or token (using localStorage for this example, should use secure cookies in production)
+                    localStorage.setItem('userToken', data.token);
+                    localStorage.setItem('userRole', data.user.role);
                     
-                    // Successful login simulation (Show message, then redirect)
+                    showMessage("Success", "Login successful! Redirecting to your dashboard.", 'success');
                     
-                    // Perform the actual redirect after a small delay
+                    // Redirect after a short delay
                     setTimeout(() => {
-                        window.location.href = targetPage; 
-                    }, 1000); 
-                    
+                        window.location.href = 'professor_dashboard.html'; 
+                    }, 1000);
+
                 } else {
-                    // Failed login simulation
-                    showMessage("Login Failed", "Invalid Faculty ID/Email or Password. Please try again.", 'error');
+                    const errorData = await response.json();
+                    // Handle 401 Unauthorized or other server errors
+                    const errorMessage = errorData.message || 'Invalid College Email or Password.';
+                    showMessage("Login Failed", errorMessage, 'error');
                 }
-            }, 1500); // 1.5 second delay for server response
+
+            } catch (error) {
+                // Handle network errors (server down, no internet)
+                console.error("Login attempt failed:", error);
+                showMessage("Network Error", "Could not connect to the server. Please check your connection or try again later.", 'error');
+            } finally {
+                // Ensure loading state is turned off regardless of success or failure
+                toggleLoading(false);
+            }
         });
     </script>
 </body>
 </html>
-
