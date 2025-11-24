@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubtout - My Contributions</title>
+    <!-- Load Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import and general base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+        }
+        
+        /* Custom scrollbar for contribution list */
+        .contribution-list-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .contribution-list-scroll::-webkit-scrollbar-thumb {
+            background: #93c5fd; /* Blue-300 */
+            border-radius: 3px;
+        }
+        
+        /* Custom ring color for focus states */
+        .focus-ring-blue {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* blue-500 with transparency */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Header (Dark theme with Blue Accent) -->
+    <header class="bg-gray-900 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                
+                <!-- Logo Block (Blue Accent) -->
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span class="text-xl font-bold tracking-tight text-blue-400">DoubtOut</span>
+                </div>
+
+               
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sub-Navigation / Dashboard Links -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
+            <a href="student_dashboard.html" id="nav-dashboard" class="text-gray-700 hover:text-blue-600 font-bold transition duration-150">My Dashboard</a>            <a href="/student_questions.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Questions</a>
+            <a href="student_contributions.html" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">My Contributions</a>
+            <a href="doubts.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Ask a Doubt</a>
+            <a href="bookmark.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Bookmarks</a>
+            <a href="practice_session.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Practice Sessions</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-4">
+            My Contributions
+        </h1>
+        <p class="text-center text-gray-600 mb-8">
+            Questions you've answered and successfully resolved for others.
+        </p>
+
+        <!-- Contribution Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Answers -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                <p class="text-sm font-medium text-gray-500">Total Answers Provided</p>
+                <p id="total-answers" class="text-3xl font-bold text-gray-900 mt-1">0</p>
+            </div>
+            
+            <!-- Voted Answers -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                <p class="text-sm font-medium text-gray-500">Answers Accepted/Voted</p>
+                <p id="accepted-answers" class="text-3xl font-bold text-gray-900 mt-1">0</p>
+            </div>
+            
+            <!-- Average Rating (Mock) -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
+                <p class="text-sm font-medium text-gray-500">Average Rating</p>
+                <p id="average-rating" class="text-3xl font-bold text-gray-900 mt-1">4.5 / 5</p>
+            </div>
+        </div>
+
+        <!-- Filter and List Container -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            
+            <!-- Course Filter -->
+            <div class="mb-4 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Answered Questions</h2>
+                <select id="course-filter" class="p-2 border-2 border-gray-300 rounded-lg focus-ring-blue transition duration-150 text-sm">
+                    <option value="">Filter by Course</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="DSA">Data Structures</option>
+                    <option value="Operating Systems">Operating Systems</option>
+                    <option value="Computer Networks">Computer Networks</option>
+                </select>
+            </div>
+
+            <!-- Contribution List -->
+            <div id="contribution-list" class="space-y-4 max-h-[60vh] overflow-y-auto contribution-list-scroll">
+                <!-- Contribution items will be dynamically injected here -->
+            </div>
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16 text-gray-500">
+                <svg class="mx-auto h-12 w-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                </svg>
+                <p class="mt-2 text-xl font-medium">You haven't contributed any answers yet.</p>
+                <p class="text-sm">Join a <a href="practice_session.html" class="text-blue-600 hover:underline">Practice Session</a> to start helping!</p>
+            </div>
+        </div>
+
+    </main>
+
+    
+    <!-- JavaScript for Data Management and Rendering -->
+    <script>
+        // Mock data for student's contributions (questions they answered)
+        const contributions = [
+            { id: 201, q_title: "How to reverse a Linked List in O(n) time?", course: "DSA", date: "2024-10-22", rating: 5, accepted: true },
+            { id: 202, q_title: "Explain the Dining Philosophers Problem and its solution.", course: "Operating Systems", date: "2024-10-23", rating: 4, accepted: true },
+            { id: 203, q_title: "Integrate $\\sin(x) / (1+\\cos^2(x))$.", course: "Mathematics", date: "2024-10-25", rating: 4, accepted: false },
+            { id: 204, q_title: "Difference between Hub, Switch, and Router.", course: "Computer Networks", date: "2024-10-26", rating: 5, accepted: true },
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const listContainer = document.getElementById('contribution-list');
+            const courseFilter = document.getElementById('course-filter');
+            const emptyState = document.getElementById('empty-state');
+            
+            const totalAnswersEl = document.getElementById('total-answers');
+            const acceptedAnswersEl = document.getElementById('accepted-answers');
+            
+            // --- Metrics Calculation ---
+            const totalAnswers = contributions.length;
+            const acceptedAnswers = contributions.filter(c => c.accepted).length;
+            
+            totalAnswersEl.textContent = totalAnswers;
+            acceptedAnswersEl.textContent = acceptedAnswers;
+
+            // Mock rating calculation (for demonstration)
+            const totalRating = contributions.reduce((sum, c) => sum + c.rating, 0);
+            const avgRating = totalAnswers > 0 ? (totalRating / totalAnswers).toFixed(1) : 'N/A';
+            document.getElementById('average-rating').textContent = `${avgRating} / 5`;
+
+
+            /**
+             * Renders the list of filtered contributions.
+             */
+            function renderContributions() {
+                listContainer.innerHTML = '';
+                const selectedCourse = courseFilter.value;
+
+                const filtered = contributions.filter(c => 
+                    selectedCourse === '' || c.course === selectedCourse
+                );
+
+                if (filtered.length === 0) {
+                    listContainer.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+
+                listContainer.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                filtered.forEach(c => {
+                    const statusText = c.accepted ? 'Accepted by Student' : 'Under Review';
+                    const statusColor = c.accepted ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700';
+                    const ratingText = `${c.rating} / 5`;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer';
+                    item.innerHTML = `
+                        <!-- Contribution Summary -->
+                        <div class="mb-3 md:mb-0 md:flex-grow">
+                            <h3 class="text-lg font-semibold text-gray-800 hover:text-blue-700">${c.q_title}</h3>
+                            <p class="text-sm text-gray-500 mt-1">
+                                <span class="font-medium text-blue-600">${c.course}</span> | Answered on: ${c.date}
+                            </p>
+                        </div>
+
+                        <!-- Metadata & Action Button -->
+                        <div class="flex items-center space-x-4 flex-shrink-0">
+                            <!-- Status Badge -->
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
+                                ${statusText}
+                            </span>
+                            <!-- Rating Badge (Using mock star icon) -->
+                            <div class="flex items-center text-sm font-medium text-yellow-600">
+                                <svg class="w-4 h-4 mr-1 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.487 7.425l6.561-.955L10 1l2.952 5.47 6.561.955-4.758 4.09 1.123 6.545z"/>
+                                </svg>
+                                <span>${ratingText}</span>
+                            </div>
+                            <button onclick="simulateViewContribution(${c.id})"
+                                class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-1.5 px-3 rounded-lg shadow-sm transition duration-150 text-sm">
+                                View Contribution
+                            </button>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            }
+
+            // Event Listener for the Course Filter
+            courseFilter.addEventListener('change', renderContributions);
+
+            // Global function to simulate viewing the full contribution details
+            window.simulateViewContribution = (id) => {
+                const c = contributions.find(c => c.id === id);
+                alert(`Viewing your detailed answer for: "${c.q_title}"\n\nThis would open a full page showing the original question and your submitted solution/explanation.`);
+            };
+
+            // Initial render
+            renderContributions();
+        });
+    </script>
+</body>
+</html>
