@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubtout - Professor My Answers</title>
+    <!-- Load Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import and general base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+        }
+        
+        /* Custom scrollbar for review list */
+        .answer-list-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .answer-list-scroll::-webkit-scrollbar-thumb {
+            background: #93c5fd; /* Blue-300 */
+            border-radius: 3px;
+        }
+        
+        /* Custom ring color for focus states (Green) */
+        .focus-ring-green {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5); /* Emerald-500 with transparency */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Header (Dark theme - GREEN) -->
+    <header class="bg-green-700 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                
+                <!-- Logo Block (Green Accent) -->
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.057l-1.976-.662M12 14l-6.16 3.422a12.083 12.083 0 01-.665-6.479A11.952 11.952 0 0012 20.057l1.976-.662" />
+                    </svg>
+                    <span class="text-xl font-bold tracking-tight text-green-300">DoubtOut - Professor</span>
+                </div>
+
+                
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sub-Navigation / Professor Dashboard Links -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
+            <a href="/professor_dashboard.html" class="text-gray-700 hover:text-green-600 font-semibold transition duration-150">My Dashboard</a>
+            <a href="/pending_review.html" class="text-gray-700 hover:text-green-600 font-semibold transition duration-150">Pending Answer Review</a>
+            <a href="my_solutions.html" class="text-green-600 border-b-2 border-green-600 font-bold transition duration-150">My Solutions</a>
+            <a href="/clear_doubts.html" class="text-gray-700 hover:text-green-600 font-semibold transition duration-150">Clear Doubts</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-4">
+            My Knowledge Contributions
+        </h1>
+        <p class="text-center text-gray-600 mb-8">
+            Review, edit, and manage all the expert answers you have provided.
+        </p>
+
+        <!-- Filter Controls -->
+        <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Status Filter -->
+                <div class="flex flex-col justify-center">
+                    <label for="status-filter" class="text-sm font-medium text-gray-700 mb-1">Filter by Status:</label>
+                    <select id="status-filter" onchange="filterAnswers()"
+                            class="p-2 border-2 border-gray-300 rounded-lg focus-ring-green transition duration-150 text-sm">
+                        <option value="">All Statuses</option>
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Needs Update">Needs Update</option>
+                    </select>
+                </div>
+                
+                <!-- Course Filter -->
+                <div class="flex flex-col justify-center">
+                    <label for="course-filter" class="text-sm font-medium text-gray-700 mb-1">Filter by Course:</label>
+                    <select id="course-filter" onchange="filterAnswers()"
+                            class="p-2 border-2 border-gray-300 rounded-lg focus-ring-green transition duration-150 text-sm">
+                        <option value="">All Courses</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="DSA">Data Structures & Algorithms</option>
+                        <option value="Operating Systems">Operating Systems</option>
+                        <option value="Computer Networks">Computer Networks</option>
+                    </select>
+                </div>
+
+                <!-- Button to Write a New Answer -->
+                <div class="flex items-end justify-end">
+                    <button onclick="alert('Navigating to New Answer Creation interface.')"
+                        class="w-full md:w-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-150 flex items-center justify-center">
+                        <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add New Expert Answer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professor Answers List Container -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Your Answer History</h2>
+            
+            <div id="answers-list" class="space-y-4 max-h-[60vh] overflow-y-auto answer-list-scroll">
+                <!-- Professor answer items will be dynamically injected here -->
+            </div>
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16 text-gray-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                <p class="mt-2 text-xl font-medium">No Answers Found</p>
+                <p class="text-sm">It looks like you haven't provided any answers matching the current filters.</p>
+            </div>
+        </div>
+
+    </main>
+
+    
+    <!-- JavaScript for Data Management and Rendering -->
+    <script>
+        // Mock data for professor's own answers
+        let professorAnswers = [
+            { id: 101, q_title: "Detailed explanation of the OSI Model Layers.", course: "Computer Networks", status: "Published", answered_at: "2024-09-15", views: 450 },
+            { id: 102, q_title: "Proof of the Master Theorem for recurrence relations.", course: "DSA", status: "Draft", answered_at: "2024-11-01", views: 0 },
+            { id: 103, q_title: "A comparative analysis of different CPU scheduling algorithms.", course: "Operating Systems", status: "Published", answered_at: "2024-10-20", views: 210 },
+            { id: 104, q_title: "Step-by-step method for solving non-homogeneous first-order ODEs.", course: "Mathematics", status: "Needs Update", answered_at: "2023-12-05", views: 980 },
+            { id: 105, q_title: "Why is hash table insertion O(1) average case?", course: "DSA", status: "Published", answered_at: "2024-08-10", views: 720 },
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            filterAnswers();
+        });
+
+        const listContainer = document.getElementById('answers-list');
+        const emptyState = document.getElementById('empty-state');
+        const courseFilter = document.getElementById('course-filter');
+        const statusFilter = document.getElementById('status-filter');
+
+        /**
+         * Generates the HTML card for a single professor answer.
+         */
+        function createAnswerCard(item) {
+            const statusMap = {
+                'Published': { color: 'bg-green-100 text-green-800 border-green-500', icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />' },
+                'Draft': { color: 'bg-gray-100 text-gray-700 border-gray-500', icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />' },
+                'Needs Update': { color: 'bg-yellow-100 text-yellow-800 border-yellow-500', icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.398 16c-.77 1.333.192 3 1.732 3z" />' }
+            };
+            const statusInfo = statusMap[item.status] || statusMap['Draft'];
+            const borderColorClass = statusInfo.color.split(' ').pop();
+
+            return `
+                <div id="prof-answer-${item.id}" class="answer-item bg-white p-4 rounded-lg shadow-md border-l-4 ${borderColorClass} flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <!-- Left Section: Details -->
+                    <div class="md:flex-grow pr-4 mb-3 md:mb-0">
+                        <h3 class="text-xl font-semibold text-gray-800">${item.q_title}</h3>
+                        <p class="text-sm text-gray-500 mt-1">
+                            <span class="font-medium text-green-600">${item.course}</span> | Answered: ${item.answered_at}
+                        </p>
+                        <div class="flex items-center space-x-3 mt-2">
+                             <span class="inline-flex items-center px-3 py-0.5 text-xs font-medium rounded-full ${statusInfo.color.replace(/border-\w+-\d+/g, '')}">
+                                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">${statusInfo.icon}</svg>
+                                Status: ${item.status}
+                            </span>
+                            <span class="text-xs text-gray-500 flex items-center">
+                                <svg class="h-4 w-4 mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                ${item.views.toLocaleString()} Views
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right Section: Actions -->
+                    <div class="flex space-x-2 flex-shrink-0">
+                        <button onclick="simulateEdit(${item.id})"
+                            title="Edit Answer"
+                            class="p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-150 flex items-center">
+                            <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Edit
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Filters and renders the answers based on course and status selection.
+         */
+        window.filterAnswers = function() {
+            const selectedCourse = courseFilter.value;
+            const selectedStatus = statusFilter.value;
+
+            const filteredItems = professorAnswers.filter(item => {
+                const courseMatch = selectedCourse === '' || item.course === selectedCourse;
+                const statusMatch = selectedStatus === '' || item.status === selectedStatus;
+                return courseMatch && statusMatch;
+            });
+
+            renderAnswers(filteredItems);
+        };
+
+        /**
+         * Renders the list of professor answers.
+         */
+        function renderAnswers(items) {
+            listContainer.innerHTML = '';
+
+            if (items.length === 0) {
+                listContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            listContainer.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            items.forEach(item => {
+                listContainer.innerHTML += createAnswerCard(item);
+            });
+        }
+
+        /**
+         * Simulates starting the edit process for an answer.
+         */
+        window.simulateEdit = function(id) {
+            const item = professorAnswers.find(i => i.id === id);
+            if (item) {
+                alert(`Starting edit process for: "${item.q_title}" (ID: ${id})\n\nAction: Navigate to a rich text editor to modify and save the expert answer.`);
+            }
+        };
+    </script>
+</body>
+</html>
