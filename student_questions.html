@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubtout - My Questions</title>
+    <!-- Load Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import and general base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+        }
+        
+        /* Custom scrollbar for question list */
+        .question-list-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .question-list-scroll::-webkit-scrollbar-thumb {
+            background: #93c5fd; /* Blue-300 */
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Header (Dark theme with Blue Accent) -->
+    <header class="bg-gray-900 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                
+                <!-- Logo Block (Blue Accent) -->
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span class="text-xl font-bold tracking-tight text-blue-400">DoubtOut</span>
+                </div>
+
+                <!-- Global Navigation Links -->
+                
+            </div>
+        </div>
+    </header>
+    
+    <!-- Sub-Navigation / Dashboard Links -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
+            <a href="student_dashboard.html" id="nav-dashboard" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Dashboard</a>
+            <a href="student_questions.html" id="nav-questions" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">My Questions</a>
+            <a href="student_contributions.html" id="nav-contributions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
+            <a href="doubts.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Ask a Doubt</a>
+            <a href="bookmark.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Bookmarks</a>
+            <a href="practice_session.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Practice Sessions</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-8">
+            My Submitted Doubts
+        </h1>
+
+        <!-- Content Area -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-gray-200 mb-6">
+                <button id="tab-active" data-status="active" 
+                        class="tab-btn py-3 px-6 text-lg font-medium border-b-2 border-blue-600 text-blue-600 transition duration-150 focus:outline-none">
+                    Active Questions (<span id="count-active">2</span>)
+                </button>
+                <button id="tab-answered" data-status="answered" 
+                        class="tab-btn py-3 px-6 text-lg font-medium border-b-2 border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-300 transition duration-150 focus:outline-none">
+                    Answered Questions (<span id="count-answered">3</span>)
+                </button>
+            </div>
+
+            <!-- List Container -->
+            <div id="question-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto question-list-scroll">
+                <!-- Questions will be rendered here -->
+            </div>
+            
+            <!-- Message when list is empty -->
+            <div id="empty-state" class="hidden text-center py-16 text-gray-500">
+                <svg class="mx-auto h-12 w-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p class="mt-2 text-xl font-medium">You have no questions in this category.</p>
+                <p class="text-sm">Why not <a href="doubts.html" class="text-blue-600 hover:underline">Ask a Doubt</a> now?</p>
+            </div>
+        </div>
+
+    </main>
+
+    
+    <!-- JavaScript for Tab Switching and Data Rendering -->
+    <script>
+        // Mock data for the student's personal questions
+        const allQuestions = [
+            { id: 101, title: "What is the difference between a mutex and a semaphore?", course: "Operating Systems", status: "answered", date: "2024-10-25", topic: "Synchronization" },
+            { id: 102, title: "Why is QuickSort preferred over MergeSort in practice?", course: "DSA", status: "active", date: "2024-10-26", topic: "Sorting" },
+            { id: 103, title: "Calculating the volume of revolution for $y=x^2$ from $x=1$ to $x=3$.", course: "Mathematics", status: "answered", date: "2024-10-28", topic: "Calculus" },
+            { id: 104, title: "Error when setting up a static IP address in Linux terminal.", course: "Computer Networks", status: "active", date: "2024-10-29", topic: "Networking Basics" },
+            { id: 105, title: "Best way to implement dynamic array resizing in C++.", course: "DSA", status: "answered", date: "2024-10-30", topic: "Data Structures" },
+        ];
+
+        let currentStatusFilter = 'active'; // Default view
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const listContainer = document.getElementById('question-list-container');
+            const emptyState = document.getElementById('empty-state');
+            const countActive = document.getElementById('count-active');
+            const countAnswered = document.getElementById('count-answered');
+
+            // Set initial counts
+            const activeCount = allQuestions.filter(q => q.status === 'active').length;
+            const answeredCount = allQuestions.filter(q => q.status === 'answered').length;
+            countActive.textContent = activeCount;
+            countAnswered.textContent = answeredCount;
+
+            /**
+             * Renders the questions based on the current filter status.
+             */
+            function renderQuestions() {
+                listContainer.innerHTML = '';
+                
+                const filteredQuestions = allQuestions.filter(q => q.status === currentStatusFilter);
+
+                if (filteredQuestions.length === 0) {
+                    listContainer.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+
+                listContainer.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                filteredQuestions.forEach(q => {
+                    const statusText = q.status === 'active' ? 'Pending Answer' : 'Answered';
+                    const statusColor = q.status === 'active' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-green-100 text-green-800 border-green-300';
+                    const buttonText = q.status === 'active' ? 'View Status' : 'View Answer';
+
+                    const item = document.createElement('div');
+                    item.className = 'bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200 flex flex-col md:flex-row justify-between items-start md:items-center';
+                    item.innerHTML = `
+                        <!-- Question Summary -->
+                        <div class="mb-3 md:mb-0 md:flex-grow">
+                            <h3 class="text-xl font-bold text-gray-800">${q.title}</h3>
+                            <p class="text-sm text-gray-500 mt-1">
+                                <span class="font-medium">${q.course} / ${q.topic}</span> | Asked on: ${q.date}
+                            </p>
+                        </div>
+
+                        <!-- Status & Action Button -->
+                        <div class="flex items-center space-x-4">
+                            <span class="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium ${statusColor} border">
+                                ${statusText}
+                            </span>
+                            <button onclick="simulateView(${q.id}, '${q.status}')"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150">
+                                ${buttonText}
+                            </button>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            }
+
+            /**
+             * Handles the tab switching logic.
+             * @param {Event} event - The click event.
+             */
+            function handleTabClick(event) {
+                const newStatus = event.currentTarget.dataset.status;
+                
+                // Update button styles
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('border-blue-600', 'text-blue-600');
+                    btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-blue-600', 'hover:border-blue-300');
+                });
+
+                event.currentTarget.classList.add('border-blue-600', 'text-blue-600');
+                event.currentTarget.classList.remove('border-transparent', 'text-gray-500', 'hover:text-blue-600', 'hover:border-blue-300');
+
+                currentStatusFilter = newStatus;
+                renderQuestions();
+            }
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', handleTabClick);
+            });
+
+            // Global function to simulate viewing the status/answer
+            window.simulateView = (id, status) => {
+                const q = allQuestions.find(q => q.id === id);
+                if (status === 'active') {
+                    alert(`Viewing Status for Question ID ${id}: "${q.title}"\n\nYour question is currently in the queue, awaiting expert review.`);
+                } else {
+                    alert(`Viewing Answer for Question ID ${id}: "${q.title}"\n\nSimulating opening the full detailed answer page.`);
+                }
+            };
+
+            // Initial render
+            renderQuestions();
+        });
+    </script>
+</body>
+</html>
