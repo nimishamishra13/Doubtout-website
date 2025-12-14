@@ -135,17 +135,9 @@
     <!-- JavaScript for Data Management and Rendering -->
     <script>
         // Mock data for professor's own answers
-        let professorAnswers = [
-            { id: 101, q_title: "Detailed explanation of the OSI Model Layers.", course: "Computer Networks", status: "Published", answered_at: "2024-09-15", views: 450 },
-            { id: 102, q_title: "Proof of the Master Theorem for recurrence relations.", course: "DSA", status: "Draft", answered_at: "2024-11-01", views: 0 },
-            { id: 103, q_title: "A comparative analysis of different CPU scheduling algorithms.", course: "Operating Systems", status: "Published", answered_at: "2024-10-20", views: 210 },
-            { id: 104, q_title: "Step-by-step method for solving non-homogeneous first-order ODEs.", course: "Mathematics", status: "Needs Update", answered_at: "2023-12-05", views: 980 },
-            { id: 105, q_title: "Why is hash table insertion O(1) average case?", course: "DSA", status: "Published", answered_at: "2024-08-10", views: 720 },
-        ];
+        let professorAnswers = [];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            filterAnswers();
-        });
+        document.addEventListener('DOMContentLoaded', loadProfessorAnswers);
 
         const listContainer = document.getElementById('answers-list');
         const emptyState = document.getElementById('empty-state');
@@ -237,6 +229,34 @@
                 listContainer.innerHTML += createAnswerCard(item);
             });
         }
+        async function loadProfessorAnswers() {
+    const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
+
+    if (!professor || professor.role !== "professor") {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `http://localhost:3000/api/professor/answers/${professor.user_id}`
+        );
+        const data = await res.json();
+
+        professorAnswers = data.answers.map(a => ({
+            id: a.answer_id,
+            q_title: a.question,
+            course: a.course,
+            status: "Published", // all submitted answers are published
+            answered_at: new Date(a.answered_at).toLocaleDateString(),
+            views: 0 // can be added later
+        }));
+
+        filterAnswers();
+    } catch (err) {
+        console.error("Failed to load professor answers", err);
+    }
+}
 
         /**
          * Simulates starting the edit process for an answer.
