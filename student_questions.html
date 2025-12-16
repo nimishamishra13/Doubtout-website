@@ -101,7 +101,7 @@
 const API_URL = "http://localhost:3000/api";
 
 // Get user from localStorage
-const loggedUser = JSON.parse(localStorage.getItem("user"));
+const loggedUser = JSON.parse(localStorage.getItem("doubtoutUser"));
 const userId = loggedUser?.user_id;
 
 // Tabs
@@ -110,7 +110,7 @@ let currentStatusFilter = "active";
 document.addEventListener("DOMContentLoaded", () => {
     if (!userId) {
         alert("You are not logged in!");
-        window.location.href = "login.html";
+        window.location.href = "login1.html";
         return;
     }
 
@@ -142,11 +142,15 @@ function renderQuestions() {
 
     listContainer.innerHTML = "";
 
-    const filtered = window.allQuestions.filter(q =>
-        currentStatusFilter === "active"
-            ? !q.answer_text
-            : q.answer_text
-    );
+    const filtered = window.allQuestions.filter(q => {
+        if (currentStatusFilter === "answered") {
+            return q.answer_text && q.answer_text.trim() !== "";
+        }
+        return !q.answer_text;
+    });
+
+    listContainer.classList.remove("hidden");
+    emptyState.classList.add("hidden");
 
     if (filtered.length === 0) {
         listContainer.classList.add("hidden");
@@ -154,16 +158,18 @@ function renderQuestions() {
         return;
     }
 
-    listContainer.classList.remove("hidden");
-    emptyState.classList.add("hidden");
-
     filtered.forEach(q => {
-        const isAnswered = q.answer_text ? true : false;
+        const isAnswered = !!q.answer_text;
 
         const statusText = isAnswered ? "Answered" : "Pending Answer";
         const statusColor = isAnswered
             ? "bg-green-100 text-green-800 border-green-300"
             : "bg-yellow-100 text-yellow-800 border-yellow-300";
+
+        const preview =
+            q.answer_text && q.answer_text.length > 120
+                ? q.answer_text.slice(0, 120) + "..."
+                : q.answer_text || "";
 
         const item = document.createElement("div");
         item.className =
@@ -171,8 +177,10 @@ function renderQuestions() {
 
         item.innerHTML = `
             <h3 class="text-xl font-bold text-gray-800">${q.question}</h3>
+
             <p class="text-sm text-gray-500 mt-1">
-                ${q.course || "General"} | Asked on: ${q.created_at?.slice(0, 10)}
+                ${q.course || "General"} |
+                Asked on: ${new Date(q.created_at).toLocaleDateString()}
             </p>
 
             <div class="flex justify-between items-center mt-4">
@@ -183,11 +191,30 @@ function renderQuestions() {
                 ${
                     isAnswered
                         ? `<button onclick="showAnswer(${q.question_id})"
-                           class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">View Answer</button>`
-                        : `<button onclick="showPending(${q.question_id})"
-                           class="bg-gray-500 text-white py-2 px-4 rounded-lg cursor-default">Pending</button>`
+                            class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+                            View Full Answer
+                          </button>`
+                        : `<span class="text-sm text-yellow-700 font-semibold">
+                            Pending Review
+                          </span>`
                 }
             </div>
+
+            ${
+                isAnswered
+                    ? `
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <p class="text-sm text-gray-700">
+                        <span class="font-semibold">Answered by:</span>
+                        ${q.answered_by_name || "Faculty"}
+                        </p>
+                        <p class="mt-2 text-gray-800">
+                            ${preview}
+                        </p>
+                    </div>
+                    `
+                    : ""
+            }
         `;
 
         listContainer.appendChild(item);
@@ -203,15 +230,18 @@ function updateCounts() {
 }
 
 function handleTabClick(event) {
-    document.querySelectorAll(".tab-btn").forEach(btn =>
-        btn.classList.remove("border-blue-600", "text-blue-600")
-    );
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("border-blue-600", "text-blue-600");
+        btn.classList.add("border-transparent", "text-gray-500");
+    });
 
     event.currentTarget.classList.add("border-blue-600", "text-blue-600");
-    currentStatusFilter = event.currentTarget.dataset.status;
+    event.currentTarget.classList.remove("border-transparent", "text-gray-500");
 
+    currentStatusFilter = event.currentTarget.dataset.status;
     renderQuestions();
 }
+
 
 function showAnswer(id) {
     const q = window.allQuestions.find(x => x.question_id === id);
