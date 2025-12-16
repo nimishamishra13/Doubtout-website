@@ -160,24 +160,29 @@ app.get('/api/student/questions/:user_id', async (req, res) => {
   try {
     const questions = await db('doubts')
       .leftJoin('answers', 'doubts.doubt_id', 'answers.doubt_id')
+      .leftJoin('users', 'answers.answered_by', 'users.user_id')
       .select(
         'doubts.doubt_id as question_id',
         'doubts.question',
         'doubts.course',
         'doubts.created_at',
+
         'answers.answer_text',
         'answers.created_at as answered_at',
-        'answers.answered_by'
+        'users.full_name as answered_by_name'
       )
       .where('doubts.user_id', user_id)
       .orderBy('doubts.created_at', 'desc');
 
-    return res.json({ questions });
+    res.json({ questions });
   } catch (err) {
     console.error('Error fetching user questions:', err);
-    return res.status(500).json({ error: 'Failed to load student questions.' });
+    res.status(500).json({ error: 'Failed to load student questions.' });
   }
 });
+
+
+
 app.get("/api/professor/doubts/:professorId", async (req, res) => {
     const professorId = Number(req.params.professorId);
 
