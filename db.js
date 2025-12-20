@@ -5,8 +5,8 @@ const knexConfig = {
     client: 'pg',
     connection: {
         host: 'localhost',  
-        user: 'postgres',    
-        password: 'Nimisha', 
+        user: env.PG_USER,    
+        password: 'password', 
         database: 'doubtoutdb', // Ensure this is set to 'doubtoutdb'
         port: 5432,
     },

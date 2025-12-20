@@ -83,23 +83,14 @@ app.post('/api/login', async (req, res) => {
         return res.status(500).json({ error: 'Server error during login. Check server logs.' });
     }
 });
-<<<<<<< HEAD
-=======
 // ----------------------------------------------------------------------
 // API Route: Get Questions
 // ----------------------------------------------------------------------
->>>>>>> 4a814ddb2eeeec6b83cdb551e943668b3e1483bc
 app.get("/api/questions", async (req, res) => {
     const status = req.query.status || "active";
 
     try {
-<<<<<<< HEAD
-        const sql = "SELECT * FROM questions WHERE status = ?";
-        const [rows] = await db.query(sql, [status]);
-
-=======
         const rows = await db("questions").where({ status });
->>>>>>> 4a814ddb2eeeec6b83cdb551e943668b3e1483bc
         res.json({ questions: rows });
 
     } catch (error) {
@@ -107,8 +98,6 @@ app.get("/api/questions", async (req, res) => {
         res.status(500).json({ error: "Failed to load questions." });
     }
 });
-<<<<<<< HEAD
-=======
 
 
 // ----------------------------------------------------------------------
@@ -268,7 +257,6 @@ app.get("/api/professor/answers/:professorId", async (req, res) => {
     }
 });
 
->>>>>>> 4a814ddb2eeeec6b83cdb551e943668b3e1483bc
 
 /**
  * Main function to connect to the database and then start the server.
@@ -287,6 +275,4 @@ async function startServer() {
     }
 }
 
-
 startServer();
-
