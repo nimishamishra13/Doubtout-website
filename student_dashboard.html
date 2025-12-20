@@ -81,25 +81,21 @@
         </div>
         
         <ul class="list-none p-0">
-            <li><a href="#dashboard" class="active">
+            <li><a href="student_dashboard.html" class="active">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0h-6"></path></svg>
                 Overview
             </a></li>
-            <li><a href="#questions">
+            <li><a href="student_questions.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c0 3.125-2.09 5.86-5.029 7.009L2.5 18h19l-1.699-1.991C17.861 14.86 15.77 12.125 15.77 9M12 4v4m0 0a2.5 2.5 0 012.5 2.5a2.5 2.5 0 01-2.5 2.5a2.5 2.5 0 01-2.5-2.5A2.5 2.5 0 0112 4z" /></svg>
                 My Questions
             </a></li>
-            <li><a href="#contributions">
+            <li><a href="student_contributions.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15h2m-2 0a2 2 0 100-4m0 4v2m0-2h-2" /></svg>
                 My Contributions
             </a></li>
             <li><a href="doubts.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 Ask a Doubt
-            </a></li>
-            <li><a href="#bookmarks">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5v14l7-7 7 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2z" /></svg>
-                Bookmarks
             </a></li>
             <li><a href="practice_session.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-4-3a7 7 0 1114 0 7 7 0 01-14 0z" /></svg>
@@ -166,34 +162,24 @@
 
     <!-- JavaScript for Dynamic Data -->
     <script>
-        // Mock data now only contains the necessary fields (name and points)
-        const MOCK_USER_DATA = {
-            name: "Rituraj Singh",
-            points: 120
-        };
+function loadDashboardData() {
+    const savedUser = JSON.parse(localStorage.getItem("doubtoutUser"));
 
-        /**
-         * Loads mock user data into the dashboard elements.
-         */
-        function loadDashboardData() {
-            // Update Welcome Message
-            const userNameElement = document.getElementById('user-name');
-            if (userNameElement) {
-                // Display only the first name for a friendly greeting
-                userNameElement.textContent = MOCK_USER_DATA.name.split(' ')[0]; 
-            }
+    if (!savedUser) {
+        window.location.href = "student_login.html"; // not logged in
+        return;
+    }
 
-            // Update Points
-            const userPointsElement = document.getElementById('user-points');
-            if (userPointsElement) {
-                userPointsElement.textContent = MOCK_USER_DATA.points.toLocaleString(); 
-            }
-            
-            // Note: The code to update the removed widgets was deleted here.
-        }
+    // Update Name
+    document.getElementById("user-name").textContent =
+        savedUser.fullName.split(" ")[0];   // first name only OR use savedUser.fullName
 
-        // Initialize the data load when the DOM is ready
-        document.addEventListener('DOMContentLoaded', loadDashboardData);
-    </script>
+    // Points (hardcoded or dynamic when backend ready)
+    document.getElementById("user-points").textContent = "0";
+}
+
+document.addEventListener("DOMContentLoaded", loadDashboardData);
+</script>
+
 </body>
 </html>

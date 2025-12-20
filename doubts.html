@@ -74,7 +74,6 @@
                 <nav class="hidden md:flex space-x-4">
                     <a href="/home.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Home</a>
                     <a href="/answer_archive.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Answer Archive</a>
-                    <a href="/ask_a_doubt.html" class="px-3 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out">Ask a Doubt</a>
                     <a href="/login.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Login / Sign Up</a>
                 </nav>
             </div>
@@ -85,10 +84,9 @@
     <nav class="bg-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
             <a href="student_dashboard.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Dasboard</a>
-            <a href="#questions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Questions</a>
-            <a href="#contributions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
+            <a href="student_questions.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Questions</a>
+            <a href="student_contributions.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
             <a href="doubts.html" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">Ask a Doubt</a>
-            <a href="#bookmarks" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Bookmarks</a>
             <a href="practice_session.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Practice Sessions</a>
         </div>
     </nav>
@@ -115,29 +113,12 @@
                         <label for="branch" class="block text-sm font-medium text-gray-700 mb-2">Select Branch:</label>
                         <select id="branch" name="branch" required class="form-input-field">
                             <option value="" disabled selected>--Select Branch--</option>
-                            <option value="civil">Civil Engineering</option>
-                            <option value="mech">Mechanical Engineering</option>
-                            <option value="eee">Electrical and Electronics Engineering</option>
-                            <option value="ece">Electronics and Communication Engineering</option>
-                            <option value="iem">Industrial Engineering and Management</option>
-                            <option value="cse">Computer Science and Engineering</option>
-                            <option value="ete">Electronics and Telecommunication Engineering</option>
-                            <option value="ise">Information Science and Engineering</option>
-                            <option value="eie">Electronics and Instrumentation Engineering</option>
-                            <option value="mee">Medical Electronics Engineering</option>
-                            <option value="che">Chemical Engineering</option>
-                            <option value="bt">Bio-Technology</option>
-                            <option value="mca">Computer Applications (MCA)</option>
-                            <option value="msrc">Management Studies and Research Centre</option>
-                            <option value="math">Mathematics Department</option>
-                            <option value="phy">Physics Department</option>
-                            <option value="chem">Chemistry Department</option>
-                            <option value="aero">Aerospace Engineering</option>
-                            <option value="ml">Machine Learning (AI and ML)</option>
-                            <option value="csds">Computer Science and Engineering (DS)</option>
-                            <option value="csiot">Computer Science and Engineering (IoT and CS)</option>
-                            <option value="aid">Artificial Intelligence and Data Science</option>
-                            <option value="csbs">Computer Science and Business Systems</option>
+                            <option value="3">Civil Engineering</option>
+                            <option value="2">Mechanical Engineering</option>
+                            <option value="5">Electronics and Communication Engineering</option>
+                            <option value="1">Computer Science and Engineering</option>
+                            <option value="4">Chemical Engineering</option>
+                            <option value="6">Machine Learning (AI and ML)</option>
                         </select>
                     </div>
 
@@ -147,7 +128,7 @@
                         <select id="semester" name="semester" required class="form-input-field">
                             <option value="" disabled selected>--Select Semester--</option>
                             <option value="1">Semester 1</option>
-                            <option value="2">Semester 2</option>
+                            <option value="1">Semester 2</option>
                             <option value="3">Semester 3</option>
                             <option value="4">Semester 4</option>
                             <option value="5">Semester 5</option>
@@ -160,13 +141,10 @@
                     <!-- Course Selection -->
                     <div>
                         <label for="course" class="block text-sm font-medium text-gray-700 mb-2">Select Course:</label>
-                        <select id="course" name="course" required class="form-input-field">
-                            <option value="" disabled selected>--Select Course--</option>
-                            <option value="maths">Mathematics</option>
-                            <option value="dsa">Data Structures</option>
-                            <option value="os">Operating Systems</option>
-                            <option value="networks">Computer Networks</option>
+                        <select id="course" class="form-input-field">
+                            <option value="">-- Select Subject --</option>
                         </select>
+
                     </div>
                 </div>
 
@@ -174,25 +152,21 @@
                 <div>
                     <label for="question" class="block text-sm font-medium text-gray-700 mb-2">Your Question:</label>
                     <textarea id="question" name="question" rows="5" placeholder="Type your question clearly and precisely here... Add #your_topic_name at the end" required
-                              class="form-input-field resize-y"></textarea>
+                                 class="form-input-field resize-y"></textarea>
                 </div>
 
                 <!-- Mention Professor -->
                 <div>
                     <label for="professor" class="block text-sm font-medium text-gray-700 mb-2">Mention Professor (Optional):</label>
                     <select id="professor" name="professor" class="form-input-field">
-                        <option value="" selected>--Select Professor--</option>
-                        <option value="prof_a">Prof. A. Sharma</option>
-                        <option value="prof_b">Prof. B. Verma</option>
-                        <option value="prof_c">Prof. C. Iyer</option>
-                        <option value="prof_d">Prof. D. Nair</option>
-                        <option value="prof_e">Prof. E. Khan</option>
+                        <option value="">--Select Professor--</option>
                     </select>
+
                 </div>
 
                 <!-- Submit Button -->
                 <div>
-                    <button type="submit" 
+                    <button type="submit" id="submit-button"
                             class="cta-button-blue w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold shadow-lg transition duration-200">
                         Submit Your Doubt
                     </button>
@@ -202,60 +176,148 @@
     </main>
 
     
-    <!-- JavaScript for Mock Form Submission -->
-    <script>
-        /**
-         * Handles the form submission, simulates an API call, and shows a success message.
-         */
-        document.getElementById('doubt-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Collect selected values for confirmation message
-            const branchText = document.getElementById('branch').options[document.getElementById('branch').selectedIndex].text;
-            const semesterText = document.getElementById('semester').options[document.getElementById('semester').selectedIndex].text;
-            const questionValue = document.getElementById('question').value.trim();
+    <!-- JavaScript for Form Submission using localStorage and Backend API -->
+   <script>
+const API_URL = "http://localhost:3000/api";
 
-            if (!branchText.startsWith('--') && !semesterText.startsWith('--') && questionValue.length > 10) {
-                
-                // Replace the form content with a success message (custom message box)
-                const formContainer = document.querySelector('.w-full.max-w-2xl');
-                
-                // Construct a summary for the user
-                const summary = `
-                    Your doubt in **${branchText} - ${semesterText}** has been successfully submitted for review. 
-                    <br>You will be notified once a student or faculty member responds!
-                `;
+const branchSelect = document.getElementById("branch");
+const semesterSelect = document.getElementById("semester");
+const courseSelect = document.getElementById("course");
+const form = document.getElementById("doubt-form");
 
-                formContainer.innerHTML = `
-                    <div class="p-8 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-green-500 mb-4" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">Doubt Submitted!</h3>
-                        <p class="text-gray-600 mt-2">${summary}</p>
-                        <a href="student-dashboard.html" class="cta-button-blue inline-block mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg font-bold">
-                            Go to Dashboard
-                        </a>
-                    </div>
-                `;
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-            } else {
-                // In a real app, this would show an inline error message on the form.
-                // Using console.error as an alternative to the forbidden alert()
-                console.error("Please ensure all required fields are selected and your question is detailed.");
-                
-                // Simple visual feedback for the user
-                const submitButton = event.target.querySelector('button[type="submit"]');
-                submitButton.textContent = "Please Complete Form!";
-                submitButton.classList.add('bg-red-500', 'hover:bg-red-600');
-                
-                setTimeout(() => {
-                    submitButton.textContent = "Submit Your Doubt";
-                    submitButton.classList.remove('bg-red-500', 'hover:bg-red-600');
-                    submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                }, 2000);
-            }
+    const userData = localStorage.getItem("doubtoutUser");
+    if (!userData) {
+        alert("Please login to submit a doubt.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const user = JSON.parse(userData);
+
+    const payload = {
+        user_id: Number(user.user_id),
+        branch: Number(document.getElementById("branch").value),
+        semester: Number(document.getElementById("semester").value),
+        course: document.getElementById("course").value,
+        question: document.getElementById("question").value.trim(),
+        professor: document.getElementById("professor").value || null
+    };
+
+    if (!payload.course || !payload.question) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/doubts`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
         });
-    </script>
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.error || "Failed to submit doubt");
+            return;
+        }
+
+        const card = document.querySelector(".hand-drawn-card");
+
+card.innerHTML = `
+    <div class="p-8 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-16 w-16 mx-auto text-green-500 mb-4"
+             viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd" />
+        </svg>
+
+        <h3 class="text-2xl font-bold text-gray-800 mb-3">
+            Doubt Submitted!
+        </h3>
+
+        <p class="text-gray-600 mb-6">
+            Your question has been successfully submitted and will be reviewed by professors.
+        </p>
+
+        <a href="student_questions.html"
+           class="cta-button-blue inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold">
+            Go to My Questions
+        </a>
+    </div>
+`;
+
+
+    } catch (err) {
+        console.error("Submit error:", err);
+        alert("Server error while submitting doubt");
+    }
+});
+async function loadSubjects() {
+    const departmentId = branchSelect.value;
+    const semester = semesterSelect.value;
+
+    courseSelect.innerHTML = `<option value="">Loading subjects...</option>`;
+
+    if (!departmentId || !semester) {
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `${API_URL}/subjects?department_id=${departmentId}&semester=${semester}`
+        );
+        const data = await res.json();
+
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+
+        data.subjects.forEach(sub => {
+            const opt = document.createElement("option");
+            opt.value = sub.subject_name;
+            opt.textContent = sub.subject_name;
+            courseSelect.appendChild(opt);
+        });
+
+    } catch (err) {
+        console.error("Failed to load subjects", err);
+        courseSelect.innerHTML = `<option value="">Error loading subjects</option>`;
+    }
+}
+
+branchSelect.addEventListener("change", loadSubjects);
+semesterSelect.addEventListener("change", loadSubjects);
+async function loadProfessors() {
+    const professorSelect = document.getElementById("professor");
+    professorSelect.innerHTML = `<option value="">Loading professors...</option>`;
+
+    try {
+        const res = await fetch("http://localhost:3000/api/professors");
+        const data = await res.json();
+
+        professorSelect.innerHTML = `<option value="">-- Select Professor --</option>`;
+
+        data.professors.forEach(p => {
+            const option = document.createElement("option");
+            option.value = p.user_id;   // numeric ID
+            option.textContent = p.full_name;
+            professorSelect.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("Failed to load professors:", err);
+        professorSelect.innerHTML = `<option value="">Error loading professors</option>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadProfessors);
+
+
+</script>
 </body>
 </html>

@@ -112,8 +112,8 @@
             </form>
 
             <div class="mt-6 text-center text-sm">
-                <a href="#" class="text-gray-400 hover:text-blue-400 font-semibold transition duration-150">
-                    Forgot Password?
+                <a href="student_signup.html" class="text-gray-400 hover:text-blue-400 font-semibold transition duration-150">
+                    New User?
                 </a>
                 <span class="text-gray-600 mx-2">|</span>
                 <a href="login.html" class="text-gray-400 hover:text-green-400 font-semibold transition duration-150">
@@ -187,6 +187,7 @@
                 submitButton.textContent = 'Login to Dashboard';
                 return;
             }
+            
 
             // 2. SEND DATA
             try {
@@ -196,16 +197,27 @@
                     body: JSON.stringify(data), 
                 });
                 
-                const result = await response.json();
 
                 if (response.ok) {
-                    showMessage("Login Successful!", `Welcome! Redirecting to the student dashboard.`, 'success');
+                    const data = await response.json();
+                    console.log("Login success:", data);
+
+                    // Store user data
+                    localStorage.setItem("doubtoutUser", JSON.stringify({
+                        token: data.token,
+                        user_id: data.user.user_id,
+                        fullName: data.user.fullName,
+                        role: data.user.role
+                    }));
+
+                    showMessage("Success", "Login successful!", "success");
 
                     setTimeout(() => {
-                        window.location.href = "student_dashboard.html"; 
-                    }, 1500);
+                        window.location.href = "student_dashboard.html";
+                    }, 800);
+                }
 
-                } else {
+                else {
                     const errorMsg = result.error || "Login failed due to invalid credentials.";
                     showMessage("Login Failed", errorMsg, 'error');
                 }

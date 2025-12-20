@@ -122,19 +122,44 @@
     
     <!-- JavaScript for Data Management and Rendering -->
     <script>
-        // Mock data for unanswered student doubts
-        let unansweredDoubts = [
-            { id: 501, q_title: "What is the complexity of Kruskal's algorithm vs. Prim's algorithm?", course: "DSA", asked_at: "8 hours ago", urgency: "High" },
-            { id: 502, q_title: "When is the Banker's Algorithm necessary in OS?", course: "Operating Systems", asked_at: "3 days ago", urgency: "Medium" },
-            { id: 503, q_title: "How to find the Fourier series of a square wave?", course: "Mathematics", asked_at: "1 hour ago", urgency: "High" },
-            { id: 504, q_title: "Detailed usage of the SSH protocol and its security features.", course: "Computer Networks", asked_at: "1 day ago", urgency: "Medium" },
-            { id: 505, q_title: "Explain the difference between P, NP, and NP-Complete problems.", course: "DSA", asked_at: "5 days ago", urgency: "Low" },
-        ];
+        let unansweredDoubts = [];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('total-doubts').textContent = unansweredDoubts.length;
-            filterDoubts();
-        });
+        // Mock data for unanswered student doubts
+        async function loadDoubts() {
+    const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
+
+    if (!professor || professor.role !== "professor") {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `http://localhost:3000/api/professor/doubts/${professor.user_id}`
+        );
+        const data = await res.json();
+
+        unansweredDoubts = data.doubts.map(d => ({
+            id: d.doubt_id,
+            q_title: d.question,
+            course: d.course,
+            asked_at: new Date(d.created_at).toLocaleDateString(),
+            urgency: "Medium" // you can compute later
+        }));
+
+        document.getElementById("total-doubts").textContent = unansweredDoubts.length;
+        filterDoubts();
+    } catch (err) {
+        console.error("Failed to load doubts", err);
+    }
+}
+document.addEventListener("DOMContentLoaded", loadDoubts);
+
+        
+        //document.addEventListener('DOMContentLoaded', () => {
+            //document.getElementById('total-doubts').textContent = unansweredDoubts.length;
+           // filterDoubts();
+        //});
 
         const listContainer = document.getElementById('doubts-list');
         const emptyState = document.getElementById('empty-state');
@@ -222,20 +247,76 @@
         /**
          * Simulates starting the process of providing an answer.
          */
-        window.simulateAnswer = function(id) {
-            const item = unansweredDoubts.find(i => i.id === id);
-            if (item) {
-                // In a real application, this would open a dedicated editor for writing the expert answer
-                alert(`Preparing to write expert answer for: "${item.q_title}" (ID: ${id})\n\nAction: Provide a comprehensive solution, which will then be marked as answered.`);
-                
-                // Simulate answering and removal from the list
-                if (window.confirm("Simulate providing the answer? (Removes it from the list)")) {
-                    unansweredDoubts = unansweredDoubts.filter(i => i.id !== id);
-                    document.getElementById('total-doubts').textContent = unansweredDoubts.length;
-                    filterDoubts(); // Re-render the list
-                }
-            }
-        };
+       window.simulateAnswer = function (id) {
+    const modal = document.createElement("div");
+    modal.className =
+        "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50";
+
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl p-6 w-11/12 max-w-2xl">
+            <h3 class="text-2xl font-bold mb-4">Write Answer</h3>
+
+            <textarea id="answer-text"
+                class="w-full border-2 border-gray-300 rounded-lg p-3 focus-ring-green"
+                rows="6"
+                placeholder="Write your detailed answer here..."></textarea>
+
+            <div class="flex justify-end space-x-3 mt-4">
+                <button
+                    class="px-4 py-2 bg-gray-300 rounded-lg"
+                    onclick="this.closest('.fixed').remove()">
+                    Cancel
+                </button>
+
+                <button
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold"
+                    onclick="submitAnswer(${id})">
+                    Submit
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+};
+
+        async function submitAnswer(doubtId) {
+    const answerText = document.getElementById("answer-text").value.trim();
+    const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
+
+if (!professor || professor.role !== "professor") {
+    alert("Unauthorized access");
+    return;
+}
+
+    if (!answerText) {
+        alert("Answer cannot be empty");
+        return;
+    }
+
+    try {
+        const res = await fetch("http://localhost:3000/api/answers", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                doubt_id: doubtId,
+                answer_text: answerText,
+                answered_by: professor.user_id
+            })
+        });
+
+        if (res.ok) {
+            alert("Answer submitted successfully");
+            location.reload();
+        } else {
+            alert("Failed to submit answer");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Server error");
+    }
+}
+
     </script>
 </body>
 </html>

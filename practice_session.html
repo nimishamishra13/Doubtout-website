@@ -4,235 +4,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doubtout - Practice Session</title>
-    <!-- Load Tailwind CSS CDN for styling -->
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        /* Custom font import and general base styles */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f8ff; 
+            background-color: #f0f8ff;
         }
 
-        /* Styling for the dropdowns and checkboxes */
         .form-input-field {
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: 2px solid #ccc;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s;
-            cursor: pointer;
+            width: 100%;
         }
+
         .form-input-field:focus {
             outline: none;
-            border-color: #3b82f6; /* Blue 500 */
+            border-color: #3b82f6;
         }
 
-        /* Bubbly CTA Button Styling (using blue accents) */
         .cta-button-blue {
             transition: all 0.15s ease-in-out;
-            border-bottom: 4px solid rgba(0, 0, 0, 0.2); 
+            border-bottom: 4px solid rgba(0,0,0,0.2);
         }
+
         .cta-button-blue:active {
             transform: translateY(2px);
             border-bottom-width: 2px;
-            box-shadow: none;
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Main Header (Dark theme with Blue Accent) -->
-    <header class="bg-gray-900 text-white shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-3">
-                
-                <!-- Logo Block (Blue Accent) -->
-                <div class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span class="text-xl font-bold tracking-tight text-blue-400">doubtout</span>
-                </div>
+<!-- HEADER -->
+<header class="bg-gray-900 text-white shadow-xl">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-xl font-bold text-blue-400">doubtout</span>
+        </div>
 
-                <!-- Global Navigation Links -->
-                <nav class="hidden md:flex space-x-4">
-                    <a href="/home.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Home</a>
-                    <a href="/answer_archive.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Answer Archive</a>
-                    <a href="/ask_a_doubt.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Ask a Doubt</a>
-                    <a href="/login.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Login / Sign Up</a>
-                </nav>
+        <nav class="hidden md:flex space-x-4">
+            <a href="/home.html" class="px-3 py-2 rounded-lg hover:bg-gray-700">Home</a>
+            <a href="/answer_archive.html" class="px-3 py-2 rounded-lg hover:bg-gray-700">Answer Archive</a>
+            <a href="/doubts.html" class="px-3 py-2 rounded-lg hover:bg-gray-700">Ask a Doubt</a>
+        </nav>
+    </div>
+</header>
+
+<!-- SUB NAV -->
+<nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-center space-x-6">
+        <a href="student_dashboard.html">Dashboard</a>
+        <a href="practice_session.html" class="text-blue-600 font-bold">Practice Session</a>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-8">
+        Practice Session Builder
+    </h1>
+
+    <!-- FILTERS -->
+    <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+            <!-- Department -->
+            <div>
+                <label class="font-semibold">Department</label>
+                <select id="branch" class="form-input-field text-gray-800">
+                    <option value="">-- Select Department --</option>
+                    <option value="1">CSE</option>
+                    <option value="2">MECH</option>
+                    <option value="3">CIVIL</option>
+                    <option value="4">CHEMICAL</option>
+                    <option value="5">ECE</option>
+                    <option value="6">AIML</option>
+                </select>
+            </div>
+
+            <!-- Semester -->
+            <div>
+                <label class="font-semibold">Semester</label>
+                <select id="semester" class="form-input-field text-gray-800">
+                    <option value="">-- Select Semester --</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+            </div>
+
+            <!-- Subject -->
+            <div>
+                <label class="font-semibold">Subject</label>
+                <select id="course" class="form-input-field text-gray-800">
+                    <option value="">-- Select Subject --</option>
+                </select>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label class="font-semibold">Status</label>
+                <select id="status" class="form-input-field text-gray-800">
+                    <option value="">All</option>
+                    <option value="answered">Answered</option>
+                    <option value="unanswered">Unanswered</option>
+                </select>
             </div>
         </div>
-    </header>
-    
-    <!-- Sub-Navigation / Dashboard Links -->
-    <nav class="bg-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
-            <a href="student_dashboard.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Dasboard</a>  
-            <a href="#questions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Questions</a>
-            <a href="#contributions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
-            <a href="doubts.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Ask a Doubt</a>
-            <a href="#bookmarks" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Bookmarks</a>
-            <a href="practice_session.html" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">Practice Sessions</a>
-        </div>
-    </nav>
+    </div>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-10">
-            Practice Session Builder
-        </h1>
+    <!-- START BUTTON -->
+    <div class="flex justify-center mb-8">
+        <button id="start-session-btn"
+            class="cta-button-blue bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-bold">
+            Start Practice Session
+        </button>
+    </div>
 
-        <div id="filter-container" class="space-y-6">
-            
-            <!-- Horizontal Filter Bar 1 (Course, Topic, Status) -->
-            <!-- Background set to blue-600 with white text -->
-            <div class="bg-blue-600 text-white p-5 rounded-lg shadow-xl">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                    
-                    <!-- Course Selection -->
-                    <div class="space-y-1">
-                        <label for="course" class="block font-semibold">Course:</label>
-                        <select id="course" name="course" class="form-input-field text-gray-800 w-full">
-                            <option value="">--Select Course--</option>
-                            <option value="maths">Mathematics</option>
-                            <option value="dsa">Data Structures</option>
-                            <option value="os">Operating Systems</option>
-                            <option value="networks">Computer Networks</option>
-                        </select>
-                    </div>
+    <!-- QUESTIONS -->
+    <div id="practice-questions" class="hidden space-y-6"></div>
 
-                    <!-- Topic Selection -->
-                    <div class="space-y-1">
-                        <label for="topic" class="block font-semibold">Topic:</label>
-                        <select id="topic" name="topic" class="form-input-field text-gray-800 w-full">
-                            <option value="">--Select Topic--</option>
-                            <option value="arrays">Arrays</option>
-                            <option value="linkedlist">Linked List</option>
-                            <option value="trees">Trees</option>
-                            <option value="recursion">Recursion</option>
-                        </select>
-                    </div>
+</main>
 
-                    <!-- Question Status -->
-                    <div class="space-y-1">
-                        <label for="status" class="block font-semibold">Status:</label>
-                        <select id="status" name="status" class="form-input-field text-gray-800 w-full">
-                            <option value="">--Select--</option>
-                            <option value="answered">Answered</option>
-                            <option value="unanswered">Unanswered</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+<!-- SCRIPT -->
+<script>
+const API_URL = "http://localhost:3000/api";
 
-            <!-- Horizontal Filter Bar 2 (Difficulty Options) -->
-            <!-- Background set to blue-600 with white text -->
-            <div class="bg-blue-600 text-white p-5 rounded-lg shadow-xl">
-                <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-12 font-semibold">
-                    <p class="text-center sm:hidden">Select Difficulty:</p>
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" name="difficulty" value="easy" class="h-5 w-5 text-blue-800 rounded focus:ring-blue-500">
-                        <span>Easy</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" name="difficulty" value="medium" class="h-5 w-5 text-blue-800 rounded focus:ring-blue-500">
-                        <span>Medium</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" name="difficulty" value="hard" class="h-5 w-5 text-blue-800 rounded focus:ring-blue-500">
-                        <span>Hard</span>
-                    </label>
-                </div>
-            </div>
+const branchSelect = document.getElementById("branch");
+const semesterSelect = document.getElementById("semester");
+const courseSelect = document.getElementById("course");
+const statusSelect = document.getElementById("status");
+const questionContainer = document.getElementById("practice-questions");
 
-            <!-- Start Session Button -->
-            <div class="flex justify-center pt-8">
-                <button id="start-session-btn" 
-                        class="cta-button-blue bg-blue-600 hover:bg-blue-700 text-white py-3 px-10 rounded-lg font-bold text-lg shadow-lg">
-                    Start Practice Session
-                </button>
-            </div>
-            
-            <!-- Message Box for Feedback (Hidden by default) -->
-            <div id="feedback-message" class="hidden text-center mt-6 p-4 rounded-lg text-lg font-semibold border-2" role="alert">
-                <!-- Content injected by JavaScript -->
-            </div>
+/* Load subjects based on department + semester */
+async function loadSubjects() {
+    const departmentId = branchSelect.value;
+    const semester = semesterSelect.value;
 
-        </div>
-    </main>
+    courseSelect.innerHTML = `<option value="">Loading subjects...</option>`;
 
-    
-    <!-- JavaScript for Handling Selections and Session Start -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const startButton = document.getElementById('start-session-btn');
-            const feedbackMessage = document.getElementById('feedback-message');
-            
-            /**
-             * Collects and validates the selected filtering options.
-             */
-            function getSelectedFilters() {
-                const course = document.getElementById('course').value;
-                const topic = document.getElementById('topic').value;
-                const status = document.getElementById('status').value;
-                
-                const difficulties = Array.from(document.querySelectorAll('input[name="difficulty"]:checked'))
-                                          .map(cb => cb.value);
+    if (!departmentId || !semester) {
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+        return;
+    }
 
-                return { course, topic, status, difficulties };
-            }
+    try {
+        const res = await fetch(
+            `${API_URL}/subjects?department_id=${departmentId}&semester=${semester}`
+        );
+        const data = await res.json();
 
-            /**
-             * Displays feedback to the user (success or error) in a custom message box.
-             * @param {string} message - The text to display.
-             * @param {string} type - 'success' or 'error'.
-             */
-            function showFeedback(message, type) {
-                feedbackMessage.textContent = message;
-                feedbackMessage.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700', 'bg-green-100', 'border-green-400', 'text-green-700');
-                
-                if (type === 'success') {
-                    feedbackMessage.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
-                } else if (type === 'error') {
-                    feedbackMessage.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
-                }
-                
-                setTimeout(() => {
-                    feedbackMessage.classList.add('hidden');
-                }, 4000);
-            }
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
 
-            // Event listener for the "Start Practice Session" button
-            startButton.addEventListener('click', () => {
-                const filters = getSelectedFilters();
-
-                // Validation: Require at least one of Course or Topic and at least one Difficulty level
-                if (!filters.course && !filters.topic) {
-                    showFeedback("Please select a Course or a Topic to start practicing.", 'error');
-                    return;
-                }
-                
-                if (filters.difficulties.length === 0) {
-                    showFeedback("Please select at least one Difficulty level (Easy, Medium, or Hard).", 'error');
-                    return;
-                }
-
-                // Construct and display the simulated start message
-                const difficultyList = filters.difficulties.join(', ');
-                const courseDetail = filters.course ? `in ${document.getElementById('course').options[document.getElementById('course').selectedIndex].text}` : '';
-                const topicDetail = filters.topic ? `on ${document.getElementById('topic').options[document.getElementById('topic').selectedIndex].text}` : '';
-                
-                const message = `
-                    Starting session ${courseDetail} ${topicDetail} with ${difficultyList} questions. Loading questions now...
-                `;
-                
-                // In a real application, an API call would happen here to fetch questions.
-                showFeedback(message, 'success');
-            });
+        data.subjects.forEach(sub => {
+            const opt = document.createElement("option");
+            opt.value = sub.subject_name; // EXACT DB VALUE
+            opt.textContent = sub.subject_name;
+            courseSelect.appendChild(opt);
         });
-    </script>
+
+    } catch (err) {
+        console.error("Error loading subjects", err);
+        courseSelect.innerHTML = `<option value="">Error loading subjects</option>`;
+    }
+}
+
+branchSelect.addEventListener("change", loadSubjects);
+semesterSelect.addEventListener("change", loadSubjects);
+
+/* Load practice questions */
+document.getElementById("start-session-btn")
+    .addEventListener("click", loadPracticeQuestions);
+
+async function loadPracticeQuestions() {
+    const course = courseSelect.value;
+    const status = statusSelect.value;
+
+    console.log("Practice filters:", { course, status });
+
+    if (!course) {
+        alert("Please select a subject");
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `${API_URL}/practice/questions?course=${encodeURIComponent(course)}&status=${status}`
+        );
+        const data = await res.json();
+
+        renderQuestions(data.questions);
+
+    } catch (err) {
+        console.error("Failed to load practice questions", err);
+    }
+}
+
+/* Render questions */
+function renderQuestions(questions) {
+    questionContainer.innerHTML = "";
+    questionContainer.classList.remove("hidden");
+
+    if (!questions || questions.length === 0) {
+        questionContainer.innerHTML = `
+            <p class="text-center text-gray-600">
+                No questions found for this filter.
+            </p>`;
+        return;
+    }
+
+    questions.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "bg-white p-6 rounded-xl shadow-md";
+
+        card.innerHTML = `
+            <h3 class="text-lg font-bold">${q.question}</h3>
+            <p class="text-sm text-gray-500">${q.course}</p>
+
+            <textarea class="w-full mt-3 border-2 rounded-lg p-2"
+                placeholder="Write your answer for practice..."></textarea>
+
+            <button class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg">
+                Submit for Review
+            </button>
+        `;
+
+        questionContainer.appendChild(card);
+    });
+}
+</script>
+
 </body>
 </html>

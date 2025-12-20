@@ -53,7 +53,6 @@
             <a href="student_questions.html" id="nav-questions" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">My Questions</a>
             <a href="student_contributions.html" id="nav-contributions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
             <a href="doubts.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Ask a Doubt</a>
-            <a href="bookmark.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Bookmarks</a>
             <a href="practice_session.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Practice Sessions</a>
         </div>
     </nav>
@@ -99,114 +98,161 @@
     <!-- JavaScript for Tab Switching and Data Rendering -->
     <script>
         // Mock data for the student's personal questions
-        const allQuestions = [
-            { id: 101, title: "What is the difference between a mutex and a semaphore?", course: "Operating Systems", status: "answered", date: "2024-10-25", topic: "Synchronization" },
-            { id: 102, title: "Why is QuickSort preferred over MergeSort in practice?", course: "DSA", status: "active", date: "2024-10-26", topic: "Sorting" },
-            { id: 103, title: "Calculating the volume of revolution for $y=x^2$ from $x=1$ to $x=3$.", course: "Mathematics", status: "answered", date: "2024-10-28", topic: "Calculus" },
-            { id: 104, title: "Error when setting up a static IP address in Linux terminal.", course: "Computer Networks", status: "active", date: "2024-10-29", topic: "Networking Basics" },
-            { id: 105, title: "Best way to implement dynamic array resizing in C++.", course: "DSA", status: "answered", date: "2024-10-30", topic: "Data Structures" },
-        ];
+const API_URL = "http://localhost:3000/api";
 
-        let currentStatusFilter = 'active'; // Default view
+// Get user from localStorage
+const loggedUser = JSON.parse(localStorage.getItem("doubtoutUser"));
+const userId = loggedUser?.user_id;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            const listContainer = document.getElementById('question-list-container');
-            const emptyState = document.getElementById('empty-state');
-            const countActive = document.getElementById('count-active');
-            const countAnswered = document.getElementById('count-answered');
+// Tabs
+let currentStatusFilter = "active";
 
-            // Set initial counts
-            const activeCount = allQuestions.filter(q => q.status === 'active').length;
-            const answeredCount = allQuestions.filter(q => q.status === 'answered').length;
-            countActive.textContent = activeCount;
-            countAnswered.textContent = answeredCount;
+document.addEventListener("DOMContentLoaded", () => {
+    if (!userId) {
+        alert("You are not logged in!");
+        window.location.href = "login1.html";
+        return;
+    }
 
-            /**
-             * Renders the questions based on the current filter status.
-             */
-            function renderQuestions() {
-                listContainer.innerHTML = '';
-                
-                const filteredQuestions = allQuestions.filter(q => q.status === currentStatusFilter);
+    loadQuestions();
 
-                if (filteredQuestions.length === 0) {
-                    listContainer.classList.add('hidden');
-                    emptyState.classList.remove('hidden');
-                    return;
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    tabButtons.forEach(btn => btn.addEventListener("click", handleTabClick));
+});
+
+/** Load questions from backend */
+async function loadQuestions() {
+    try {
+        const res = await fetch(`${API_URL}/student/questions/${userId}`);
+        const data = await res.json();
+        window.allQuestions = data.questions;  // Save globally
+
+        renderQuestions();
+        updateCounts();
+
+    } catch (error) {
+        console.error("Error loading questions:", error);
+    }
+}
+
+/** Renders questions based on filter */
+function renderQuestions() {
+    const listContainer = document.getElementById("question-list-container");
+    const emptyState = document.getElementById("empty-state");
+
+    listContainer.innerHTML = "";
+
+    const filtered = window.allQuestions.filter(q => {
+        if (currentStatusFilter === "answered") {
+            return q.answer_text && q.answer_text.trim() !== "";
+        }
+        return !q.answer_text;
+    });
+
+    listContainer.classList.remove("hidden");
+    emptyState.classList.add("hidden");
+
+    if (filtered.length === 0) {
+        listContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+    }
+
+    filtered.forEach(q => {
+        const isAnswered = !!q.answer_text;
+
+        const statusText = isAnswered ? "Answered" : "Pending Answer";
+        const statusColor = isAnswered
+            ? "bg-green-100 text-green-800 border-green-300"
+            : "bg-yellow-100 text-yellow-800 border-yellow-300";
+
+        const preview =
+            q.answer_text && q.answer_text.length > 120
+                ? q.answer_text.slice(0, 120) + "..."
+                : q.answer_text || "";
+
+        const item = document.createElement("div");
+        item.className =
+            "bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200";
+
+        item.innerHTML = `
+            <h3 class="text-xl font-bold text-gray-800">${q.question}</h3>
+
+            <p class="text-sm text-gray-500 mt-1">
+                ${q.course || "General"} |
+                Asked on: ${new Date(q.created_at).toLocaleDateString()}
+            </p>
+
+            <div class="flex justify-between items-center mt-4">
+                <span class="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium ${statusColor} border">
+                    ${statusText}
+                </span>
+
+                ${
+                    isAnswered
+                        ? `<button onclick="showAnswer(${q.question_id})"
+                            class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+                            View Full Answer
+                          </button>`
+                        : `<span class="text-sm text-yellow-700 font-semibold">
+                            Pending Review
+                          </span>`
                 }
+            </div>
 
-                listContainer.classList.remove('hidden');
-                emptyState.classList.add('hidden');
-
-                filteredQuestions.forEach(q => {
-                    const statusText = q.status === 'active' ? 'Pending Answer' : 'Answered';
-                    const statusColor = q.status === 'active' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-green-100 text-green-800 border-green-300';
-                    const buttonText = q.status === 'active' ? 'View Status' : 'View Answer';
-
-                    const item = document.createElement('div');
-                    item.className = 'bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200 flex flex-col md:flex-row justify-between items-start md:items-center';
-                    item.innerHTML = `
-                        <!-- Question Summary -->
-                        <div class="mb-3 md:mb-0 md:flex-grow">
-                            <h3 class="text-xl font-bold text-gray-800">${q.title}</h3>
-                            <p class="text-sm text-gray-500 mt-1">
-                                <span class="font-medium">${q.course} / ${q.topic}</span> | Asked on: ${q.date}
-                            </p>
-                        </div>
-
-                        <!-- Status & Action Button -->
-                        <div class="flex items-center space-x-4">
-                            <span class="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium ${statusColor} border">
-                                ${statusText}
-                            </span>
-                            <button onclick="simulateView(${q.id}, '${q.status}')"
-                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150">
-                                ${buttonText}
-                            </button>
-                        </div>
-                    `;
-                    listContainer.appendChild(item);
-                });
+            ${
+                isAnswered
+                    ? `
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <p class="text-sm text-gray-700">
+                        <span class="font-semibold">Answered by:</span>
+                        ${q.answered_by_name || "Faculty"}
+                        </p>
+                        <p class="mt-2 text-gray-800">
+                            ${preview}
+                        </p>
+                    </div>
+                    `
+                    : ""
             }
+        `;
 
-            /**
-             * Handles the tab switching logic.
-             * @param {Event} event - The click event.
-             */
-            function handleTabClick(event) {
-                const newStatus = event.currentTarget.dataset.status;
-                
-                // Update button styles
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('border-blue-600', 'text-blue-600');
-                    btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-blue-600', 'hover:border-blue-300');
-                });
+        listContainer.appendChild(item);
+    });
+}
 
-                event.currentTarget.classList.add('border-blue-600', 'text-blue-600');
-                event.currentTarget.classList.remove('border-transparent', 'text-gray-500', 'hover:text-blue-600', 'hover:border-blue-300');
+function updateCounts() {
+    document.getElementById("count-active").textContent =
+        window.allQuestions.filter(q => !q.answer_text).length;
 
-                currentStatusFilter = newStatus;
-                renderQuestions();
-            }
+    document.getElementById("count-answered").textContent =
+        window.allQuestions.filter(q => q.answer_text).length;
+}
 
-            tabButtons.forEach(btn => {
-                btn.addEventListener('click', handleTabClick);
-            });
+function handleTabClick(event) {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("border-blue-600", "text-blue-600");
+        btn.classList.add("border-transparent", "text-gray-500");
+    });
 
-            // Global function to simulate viewing the status/answer
-            window.simulateView = (id, status) => {
-                const q = allQuestions.find(q => q.id === id);
-                if (status === 'active') {
-                    alert(`Viewing Status for Question ID ${id}: "${q.title}"\n\nYour question is currently in the queue, awaiting expert review.`);
-                } else {
-                    alert(`Viewing Answer for Question ID ${id}: "${q.title}"\n\nSimulating opening the full detailed answer page.`);
-                }
-            };
+    event.currentTarget.classList.add("border-blue-600", "text-blue-600");
+    event.currentTarget.classList.remove("border-transparent", "text-gray-500");
 
-            // Initial render
-            renderQuestions();
-        });
+    currentStatusFilter = event.currentTarget.dataset.status;
+    renderQuestions();
+}
+
+
+function showAnswer(id) {
+    const q = window.allQuestions.find(x => x.question_id === id);
+    alert(`Answer:\n\n${q.answer_text}`);
+}
+
+function showPending(id) {
+    const q = window.allQuestions.find(x => x.question_id === id);
+    alert(`Your question "${q.question}" is still pending review.`);
+}
+
     </script>
 </body>
 </html>
