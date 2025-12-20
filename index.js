@@ -83,6 +83,20 @@ app.post('/api/login', async (req, res) => {
         return res.status(500).json({ error: 'Server error during login. Check server logs.' });
     }
 });
+app.get("/api/questions", async (req, res) => {
+    const status = req.query.status || "active";
+
+    try {
+        const sql = "SELECT * FROM questions WHERE status = ?";
+        const [rows] = await db.query(sql, [status]);
+
+        res.json({ questions: rows });
+
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        res.status(500).json({ error: "Failed to load questions." });
+    }
+});
 
 /**
  * Main function to connect to the database and then start the server.
@@ -101,4 +115,6 @@ async function startServer() {
     }
 }
 
+
 startServer();
+
