@@ -14,8 +14,20 @@ const saltRounds = 10;
  * @param {object} roleDetails - Object containing role-specific data (e.g., { major, studentIdNumber }).
  * @returns {object} The newly created user's basic details.
  */
+
+function isAllowedEmail(email) {
+    return (
+        typeof email === "string" &&
+        email.toLowerCase().endsWith("@${process.env.ALLOWED_EMAIL_DOMAIN}")
+    );
+}
+
+
 async function signUpUser(email, password, fullName, role, roleDetails) {
     try {
+        if (!isAllowedEmail(email)) {
+            throw new Error("Only bmsce.ac.in email addresses are allowed.");
+        }
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         // 1. Check if the user already exists

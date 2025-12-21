@@ -212,6 +212,14 @@
             `;
             document.body.appendChild(container);
         }
+        
+
+        function isBmsceEmail(email) {
+            return (
+                typeof email === "string" &&
+                email.toLowerCase().endsWith("@bmsce.ac.in")
+            );
+        }
 
         /**
          * Handles the form submission and connects to the Node.js backend /api/signup endpoint.
@@ -236,6 +244,19 @@
                     major: document.getElementById('major').value.trim(),
                 }
             };
+
+            //  College email validation (BMSCE only)
+            if (!isBmsceEmail(data.email)) {
+                showMessage(
+                    "Invalid Email",
+                    "Please register using your official college email ending with @bmsce.ac.in",
+                    "error"
+                );
+                submitButton.disabled = false;
+                submitButton.textContent = 'Create Student Account';
+                return;
+            }
+
             
             // Basic client-side validation check
             if (Object.values(data).some(val => val === '') || Object.values(data.roleDetails).some(val => val === '')) {

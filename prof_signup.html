@@ -1,201 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DoubtOut - Professor Signup</title>
     <!-- Load Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Base styles */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f8ff; /* Light blue background */
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+      /* Base styles */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
-        /* Hand-Drawn Card Style (Applied to the main login box) */
-        .hand-drawn-card {
-            border: 4px solid #1f2937; /* Dark border */
-            box-shadow: 8px 8px 0px 0px rgba(31, 41, 55, 0.4); /* Offset shadow */
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f8ff; /* Light blue background */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
 
-        .hand-drawn-card:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 10px 10px 0px 0px rgba(31, 41, 55, 0.5); 
-        }
+      /* Hand-Drawn Card Style (Applied to the main login box) */
+      .hand-drawn-card {
+        border: 4px solid #1f2937; /* Dark border */
+        box-shadow: 8px 8px 0px 0px rgba(31, 41, 55, 0.4); /* Offset shadow */
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
 
-        /* Call-to-Action Button Style (For the submit button) */
-        .cta-button {
-            transition: all 0.15s ease-in-out;
-            border-bottom: 4px solid rgba(0, 0, 0, 0.2); 
-        }
-        .cta-button:active {
-            transform: translateY(2px);
-            border-bottom-width: 2px;
-            box-shadow: none;
-        }
-        
-        .login-container {
-            flex-grow: 1; /* Make it take up available space */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 0;
-        }
+      .hand-drawn-card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 10px 10px 0px 0px rgba(31, 41, 55, 0.5);
+      }
 
-        /* Custom Loading State for Button */
-        .cta-button:disabled {
-            background-color: #a7f3d0; /* light green */
-            cursor: not-allowed;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-        }
+      /* Call-to-Action Button Style (For the submit button) */
+      .cta-button {
+        transition: all 0.15s ease-in-out;
+        border-bottom: 4px solid rgba(0, 0, 0, 0.2);
+      }
+      .cta-button:active {
+        transform: translateY(2px);
+        border-bottom-width: 2px;
+        box-shadow: none;
+      }
+
+      .login-container {
+        flex-grow: 1; /* Make it take up available space */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+      }
+
+      /* Custom Loading State for Button */
+      .cta-button:disabled {
+        background-color: #a7f3d0; /* light green */
+        cursor: not-allowed;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <header class="bg-gray-900 text-white shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-3">
-                <div class="flex items-center space-x-2">
-                    <!-- Icon changed to green for the Professor theme -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.5l-4 4m0 0l4 4m-4-4h12" />
-                    </svg>
-                    <span class="text-xl font-bold tracking-tight text-green-400">doubtout</span>
-                </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-3">
+          <div class="flex items-center space-x-2">
+            <!-- Icon changed to green for the Professor theme -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-7 w-7 text-green-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6.5l-4 4m0 0l4 4m-4-4h12"
+              />
+            </svg>
+            <span class="text-xl font-bold tracking-tight text-green-400"
+              >doubtout</span
+            >
+          </div>
 
-                <nav class="hidden md:flex space-x-4">
-                    <a href="home.html" class="px-3 py-2 rounded-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">Home</a>
-                    <a href="answer-archive.html" class="px-3 py-2 rounded-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">Archive</a>
-                </nav>
-            </div>
+          <nav class="hidden md:flex space-x-4">
+            <a
+              href="home.html"
+              class="px-3 py-2 rounded-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out"
+              >Home</a
+            >
+            <a
+              href="answer-archive.html"
+              class="px-3 py-2 rounded-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out"
+              >Archive</a
+            >
+          </nav>
         </div>
+      </div>
     </header>
 
     <main class="login-container">
-        
-        <!-- Professor Signup Card -->
-        <section class="bg-gray-800 text-white rounded-xl p-8 w-full max-w-sm hand-drawn-card">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-extrabold mb-2 tracking-tight text-green-300">
-                    Professor Sign Up
-                </h1>
-                <p class="text-lg text-gray-400">
-                    Share your expertise and mentor students.
-                </p>
-            </div>
+      <!-- Professor Signup Card -->
+      <section
+        class="bg-gray-800 text-white rounded-xl p-8 w-full max-w-sm hand-drawn-card"
+      >
+        <div class="text-center mb-8">
+          <h1
+            class="text-3xl font-extrabold mb-2 tracking-tight text-green-300"
+          >
+            Professor Sign Up
+          </h1>
+          <p class="text-lg text-gray-400">
+            Share your expertise and mentor students.
+          </p>
+        </div>
 
-            <form id="professor-signup-form" class="space-y-6">
-                
-                <!-- Hidden Role Field -->
-                <input type="hidden" name="role" value="professor">
-                
-                <!-- Full Name -->
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-300 mb-1">
-                        Full Name
-                    </label>
-                    <input type="text" id="name" name="name" required 
-                            placeholder="e.g., Dr. Jane Smith"
-                            class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150">
-                </div>
-                
-                <!-- Work Email -->
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">
-                        Work Email Address
-                    </label>
-                    <input type="email" id="email" name="email" required 
-                            placeholder="jane.smith@university.edu"
-                            class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150">
-                </div>
+        <form id="professor-signup-form" class="space-y-6">
+          <!-- Hidden Role Field -->
+          <input type="hidden" name="role" value="professor" />
 
-                <!-- Password -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-300 mb-1">
-                        Password
-                    </label>
-                    <input type="password" id="password" name="password" required minlength="8" 
-                            placeholder="Minimum 8 characters"
-                            class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150">
-                </div>
+          <!-- Full Name -->
+          <div>
+            <label
+              for="name"
+              class="block text-sm font-medium text-gray-300 mb-1"
+            >
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="e.g., Dr. Jane Smith"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150"
+            />
+          </div>
 
-                <!-- College ID (New Field) -->
-                <div>
-                    <label for="college-id" class="block text-sm font-medium text-gray-300 mb-1">
-                        College ID / Employee Number
-                    </label>
-                    <input type="text" id="college-id" name="collegeId" required 
-                            placeholder="e.g., FAC10023"
-                            class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150">
-                </div>
+          <!-- Work Email -->
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-300 mb-1"
+            >
+              Work Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="jane.smith@university.edu"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150"
+            />
+          </div>
 
-                <!-- Department (New Field) -->
-                <div>
-                    <label for="department" class="block text-sm font-medium text-gray-300 mb-1">
-                        Department
-                    </label>
-                    <input type="text" id="department" name="department" required 
-                            placeholder="e.g., Computer Science"
-                            class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150">
-                </div>
+          <!-- Password -->
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-300 mb-1"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              minlength="8"
+              placeholder="Minimum 8 characters"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150"
+            />
+          </div>
 
+          <!-- College ID (New Field) -->
+          <div>
+            <label
+              for="college-id"
+              class="block text-sm font-medium text-gray-300 mb-1"
+            >
+              College ID / Employee Number
+            </label>
+            <input
+              type="text"
+              id="college-id"
+              name="collegeId"
+              required
+              placeholder="e.g., FAC10023"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150"
+            />
+          </div>
 
-                <button type="submit" id="signup-submit-btn" class="cta-button w-full bg-green-300 hover:bg-green-400 text-gray-900 shadow-md py-4 rounded-lg font-extrabold text-lg tracking-wide transition duration-200">
-                    Create Professor Account
-                </button>
-            </form>
+          <!-- Department (New Field) -->
+          <div>
+            <label
+              for="department"
+              class="block text-sm font-medium text-gray-300 mb-1"
+            >
+              Department
+            </label>
+            <input
+              type="text"
+              id="department"
+              name="department"
+              required
+              placeholder="e.g., Computer Science"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border-2 border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition duration-150"
+            />
+          </div>
 
-            <div class="mt-6 text-center text-sm">
-                
-                <span class="text-gray-600 mx-2"></span>
-                <a href="professor_login.html" class="text-gray-400 hover:text-green-400 font-semibold transition duration-150">
-                    Already Registered? Go to Login Page
-                </a>
-            </div>
-        </section>
-        
+          <button
+            type="submit"
+            id="signup-submit-btn"
+            class="cta-button w-full bg-green-300 hover:bg-green-400 text-gray-900 shadow-md py-4 rounded-lg font-extrabold text-lg tracking-wide transition duration-200"
+          >
+            Create Professor Account
+          </button>
+        </form>
+
+        <div class="mt-6 text-center text-sm">
+          <span class="text-gray-600 mx-2"></span>
+          <a
+            href="professor_login.html"
+            class="text-gray-400 hover:text-green-400 font-semibold transition duration-150"
+          >
+            Already Registered? Go to Login Page
+          </a>
+        </div>
+      </section>
     </main>
 
     <footer class="bg-gray-900 text-gray-400 py-4 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
-            <p>&copy; 2025 doubtout - A College Q&A Platform.</p>
-        </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+        <p>&copy; 2025 doubtout - A College Q&A Platform.</p>
+      </div>
     </footer>
 
     <script>
-        const API_URL = 'http://localhost:3000/api';
-        const form = document.getElementById('professor-signup-form');
-        const submitButton = document.getElementById('signup-submit-btn');
+      const API_URL = "http://localhost:3000/api";
+      const form = document.getElementById("professor-signup-form");
+      const submitButton = document.getElementById("signup-submit-btn");
+      function isBmsceEmail(email) {
+        if (
+          
+          email.toLowerCase().endsWith("@bmsce.ac.in")
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      /**
+       * Custom modal message function (replacing alert())
+       */
+      function showMessage(title, message, type = "info") {
+        // Remove any existing modal first
+        document.querySelector(".fixed.inset-0.z-50")?.remove();
 
-        /**
-         * Custom modal message function (replacing alert())
-         */
-        function showMessage(title, message, type = 'info') {
-            // Remove any existing modal first
-            document.querySelector('.fixed.inset-0.z-50')?.remove();
-            
-            const container = document.createElement('div');
-            container.className = 'fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-70 transition-opacity duration-300';
-            
-            let colorClass = 'bg-gray-300';
-            let textColor = 'text-gray-900';
-            if (type === 'error') {
-                colorClass = 'bg-red-500';
-                textColor = 'text-red-700';
-            }
-            if (type === 'success') {
-                colorClass = 'bg-green-500';
-                textColor = 'text-green-700';
-            }
+        const container = document.createElement("div");
+        container.className =
+          "fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-70 transition-opacity duration-300";
 
-            container.innerHTML = `
+        let colorClass = "bg-gray-300";
+        let textColor = "text-gray-900";
+        if (type === "error") {
+          colorClass = "bg-red-500";
+          textColor = "text-red-700";
+        }
+        if (type === "success") {
+          colorClass = "bg-green-500";
+          textColor = "text-green-700";
+        }
+
+        container.innerHTML = `
                 <div class="bg-white rounded-xl hand-drawn-card p-6 w-11/12 max-w-sm transform transition-transform duration-300 scale-100">
                     <div class="flex items-center space-x-3 mb-4">
                         <div class="w-2 h-8 ${colorClass} rounded-full"></div>
@@ -207,76 +284,104 @@
                     </button>
                 </div>
             `;
-            document.body.appendChild(container);
+        document.body.appendChild(container);
+      }
+
+      /**
+       * Handles the form submission and connects to the Node.js backend /api/signup endpoint.
+       */
+      async function handleSignup(event) {
+        event.preventDefault(); // Stop the default form submission (page reload)
+
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Registering...`;
+
+        // 1. GATHER DATA from the form fields
+        const data = {
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+          fullName: document.getElementById("name").value.trim(),
+          role: "professor", // Hardcoded role for this specific page
+
+          // Role-specific details MUST be nested under roleDetails object
+          roleDetails: {
+            collegeId: document.getElementById("college-id").value.trim(),
+            department: document.getElementById("department").value.trim(),
+          },
+        };
+
+        // 🔒 College email validation (BMSCE only)
+        if (!isBmsceEmail(data.email)) {
+          showMessage(
+            "Invalid Email",
+            "Please register using your official college email ending with @bmsce.ac.in",
+            "error"
+          );
+          submitButton.disabled = false;
+          submitButton.textContent = "Create Professor Account";
+          return;
         }
 
-        /**
-         * Handles the form submission and connects to the Node.js backend /api/signup endpoint.
-         */
-        async function handleSignup(event) {
-            event.preventDefault(); // Stop the default form submission (page reload)
-
-            // Disable button and show loading state
-            submitButton.disabled = true;
-            submitButton.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Registering...`;
-
-            // 1. GATHER DATA from the form fields
-            const data = {
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-                fullName: document.getElementById('name').value.trim(),
-                role: 'professor', // Hardcoded role for this specific page
-                
-                // Role-specific details MUST be nested under roleDetails object
-                roleDetails: {
-                    collegeId: document.getElementById('college-id').value.trim(),
-                    department: document.getElementById('department').value.trim(),
-                }
-            };
-            
-            // Basic client-side validation check
-            if (Object.values(data).some(val => val === '') || Object.values(data.roleDetails).some(val => val === '')) {
-                showMessage("Input Error", "Please ensure all required fields are filled out.", 'error');
-                submitButton.disabled = false;
-                submitButton.textContent = 'Create Professor Account';
-                return;
-            }
-
-            // 2. SEND DATA using the fetch API
-            try {
-                const response = await fetch(`${API_URL}/signup`, {
-                    method: 'POST', 
-                    headers: {
-                        'Content-Type': 'application/json', 
-                    },
-                    body: JSON.stringify(data), 
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    // Success! (Server returned 201 Created)
-                    showMessage("Account Created!", `Welcome, Professor ${data.fullName}! Your account has been successfully registered. You may now log in.`, 'success');
-                    // In a real application, you would redirect:
-                    // window.location.href = "professor_login.html"; 
-                } else {
-                    // Failure (Server returned 4xx or 5xx)
-                    const errorMsg = result.error || "An unknown error occurred during registration.";
-                    showMessage("Sign Up Failed", errorMsg, 'error');
-                }
-            } catch (error) {
-                // Handle network errors 
-                console.error('Network Error:', error);
-                showMessage("Connection Error", "Cannot reach the backend server. Make sure your Node.js application is running on port 3000!", 'error');
-            } finally {
-                // Re-enable button regardless of success/failure
-                submitButton.disabled = false;
-                submitButton.textContent = 'Create Professor Account';
-            }
+        // Basic client-side validation check
+        if (
+          Object.values(data).some((val) => val === "") ||
+          Object.values(data.roleDetails).some((val) => val === "")
+        ) {
+          showMessage(
+            "Input Error",
+            "Please ensure all required fields are filled out.",
+            "error"
+          );
+          submitButton.disabled = false;
+          submitButton.textContent = "Create Professor Account";
+          return;
         }
-        
-        // Attach the async handleSignup function to the form submission event
-        form.addEventListener('submit', handleSignup);
+
+        // 2. SEND DATA using the fetch API
+        try {
+          const response = await fetch(`${API_URL}/signup`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            // Success! (Server returned 201 Created)
+            showMessage(
+              "Account Created!",
+              `Welcome, Professor ${data.fullName}! Your account has been successfully registered. You may now log in.`,
+              "success"
+            );
+            // In a real application, you would redirect:
+            // window.location.href = "professor_login.html";
+          } else {
+            // Failure (Server returned 4xx or 5xx)
+            const errorMsg =
+              result.error || "An unknown error occurred during registration.";
+            showMessage("Sign Up Failed", errorMsg, "error");
+          }
+        } catch (error) {
+          // Handle network errors
+          console.error("Network Error:", error);
+          showMessage(
+            "Connection Error",
+            "Cannot reach the backend server. Make sure your Node.js application is running on port 3000!",
+            "error"
+          );
+        } finally {
+          // Re-enable button regardless of success/failure
+          submitButton.disabled = false;
+          submitButton.textContent = "Create Professor Account";
+        }
+      }
+
+      // Attach the async handleSignup function to the form submission event
+      form.addEventListener("submit", handleSignup);
     </script>
-</body>
+  </body>
 </html>
