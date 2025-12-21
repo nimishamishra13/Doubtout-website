@@ -161,11 +161,34 @@ app.get('/api/practice/questions', async (req, res) => {
     res.json({ questions });
 });
 
-app.post('/api/practice/answer', async (req, res) => {
+app.post("/api/practice/answer", async (req, res) => {
     const { doubt_id, student_id, answer_text } = req.body;
-    await db('practice_answers').insert({ doubt_id, student_id, answer_text, status: 'pending' });
-    res.json({ message: 'Practice answer submitted' });
+
+    try {
+        // find professor who owns this doubt
+        const doubt = await db("doubts")
+            .select("asked_by")
+            .where({ doubt_id })
+            .first();
+
+        if (!doubt) {
+            return res.status(404).json({ error: "Doubt not found" });
+        }
+
+        await db("practice_answers").insert({
+            doubt_id,
+            student_id,
+            answer_text,
+            status: "pending"
+        });
+
+        res.json({ message: "Submitted for professor review" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to submit practice answer" });
+    }
 });
+
 
 /* ---------------- LEADERBOARD ---------------- */
 app.get('/api/leaderboard', async (req, res) => {
@@ -200,28 +223,140 @@ app.get('/api/archive', async (req, res) => {
     res.json({ archive: await query });
 });
 // GET student contributions (approved answers)
+// GET /api/student/contributions/:studentId
 app.get("/api/student/contributions/:studentId", async (req, res) => {
     const { studentId } = req.params;
 
     try {
-        const contributions = await db("practice_answers")
+        const pending = await db("practice_answers")
+            .where({ student_id: studentId, status: "pending" });
+
+        const approved = await db("practice_answers")
+            .join("users", "practice_answers.reviewed_by", "users.user_id")
+            .select(
+                "practice_answers.*",
+                "users.full_name as professor_name"
+            )
+            .where({
+                student_id: studentId,
+                status: "approved"
+            });
+
+        res.json({
+            pending_count: pending.length,
+            approved_count: approved.length,
+            approved_answers: approved
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: "Failed to load contributions" });
+    }
+});
+app.post("/api/practice/approve", async (req, res) => {
+    const { practice_answer_id, professor_id } = req.body;
+
+    try {
+        // 1. Approve answer
+        const approveQuery = `
+            UPDATE practice_answers
+            SET status = 'approved',
+                reviewed_by = $1,
+                reviewed_at = NOW()
+            WHERE practice_answer_id = $2
+            RETURNING student_id;
+        `;
+
+        const result = await pool.query(approveQuery, [
+            professor_id,
+            practice_answer_id
+        ]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Answer not found" });
+        }
+
+        const studentId = result.rows[0].student_id;
+
+        // 2. Give points to student
+        await pool.query(
+            `UPDATE users SET points = points + 10 WHERE user_id = $1`,
+            [studentId]
+        );
+
+        res.json({ message: "Answer approved and points awarded" });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+app.post("/api/professor/practice/review", async (req, res) => {
+    const { practice_id, professor_id, action } = req.body;
+
+    if (!["approved", "rejected"].includes(action)) {
+        return res.status(400).json({ error: "Invalid action" });
+    }
+
+    try {
+        await db("practice_answers")
+            .where({ practice_id })
+            .update({
+                status: action,
+                reviewed_by: professor_id,
+                reviewed_at: db.fn.now()
+            });
+
+        res.json({ message: "Review updated" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to update review" });
+    }
+});
+
+app.get("/api/professor/answers/:professorId", async (req, res) => {
+    const professorId = Number(req.params.professorId);
+
+    try {
+        const rows = await db("answers")
+            .join("doubts", "answers.doubt_id", "doubts.doubt_id")
+            .select(
+                "answers.answer_id",
+                "answers.answer_text",
+                "answers.created_at as answered_at",
+                "doubts.question",
+                "doubts.course"
+            )
+            .where("answers.answered_by", professorId)
+            .orderBy("answers.created_at", "desc");
+
+        res.json({ answers: rows });
+    } catch (err) {
+        console.error("Professor answers error:", err);
+        res.status(500).json({ error: "Failed to fetch answers" });
+    }
+});
+app.get("/api/professor/practice/:professorId", async (req, res) => {
+    const professorId = Number(req.params.professorId);
+
+    try {
+        const rows = await db("practice_answers")
             .join("doubts", "practice_answers.doubt_id", "doubts.doubt_id")
-            .join("users as prof", "practice_answers.reviewed_by", "prof.user_id")
+            .join("users", "practice_answers.student_id", "users.user_id")
             .select(
                 "practice_answers.practice_id",
+                "practice_answers.answer_text",
+                "practice_answers.status",
                 "doubts.question",
                 "doubts.course",
-                "practice_answers.status",
-                "prof.full_name as professor_name"
+                "users.name as student_name"
             )
-            .where("practice_answers.student_id", studentId)
-            .where("practice_answers.status", "correct")
-            .orderBy("practice_answers.reviewed_at", "desc");
+            .where("doubts.asked_by", professorId)
+            .andWhere("practice_answers.status", "pending");
 
-        res.json({ contributions });
+        res.json({ practices: rows });
     } catch (err) {
-        console.error("Student contributions error:", err);
-        res.status(500).json({ error: "Failed to load contributions" });
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch pending reviews" });
     }
 });
 

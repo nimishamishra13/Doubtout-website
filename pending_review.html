@@ -80,11 +80,7 @@
                     <p id="total-pending" class="text-3xl font-bold text-green-700 mt-1">0</p>
                 </div>
                 
-                <!-- Average Wait Time (YELLOW/AMBER for contrast) -->
-                <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 text-center">
-                    <p class="text-sm font-medium text-gray-500">Avg. Time Since Submission</p>
-                    <p id="avg-wait-time" class="text-3xl font-bold text-amber-700 mt-1">4.2 Hrs</p>
-                </div>
+                
                 
                 <!-- Course Filter -->
                 <div class="flex flex-col justify-center">
@@ -153,6 +149,32 @@ async function loadPendingReviews() {
         console.error("Failed to load practice reviews", err);
     }
 }
+async function reviewPractice(practiceId, action) {
+    try {
+        const res = await fetch(`${API}/professor/practice/review`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                practice_id: practiceId,
+                professor_id: professor.user_id,
+                action // "approved" or "rejected"
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.error || "Review failed");
+            return;
+        }
+
+        alert(`Answer ${action}`);
+        loadPendingReviews(); // refresh list
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 </script>
 </body>
 </html>
