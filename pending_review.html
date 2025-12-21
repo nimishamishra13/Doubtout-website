@@ -124,119 +124,35 @@
     
     <!-- JavaScript for Data Management and Rendering -->
     <script>
-        // Mock data for pending student answers
-        let pendingAnswers = [
-            { id: 401, q_title: "Explain TCP Slow Start mechanism and its purpose.", course: "Computer Networks", student: "Alice J.", submitted_at: "2 hours ago", priority: "High" },
-            { id: 402, q_title: "How to implement a Thread-Safe Singleton Pattern in Java?", course: "DSA", student: "Bob K.", submitted_at: "5 hours ago", priority: "Medium" },
-            { id: 403, q_title: "Find the general solution of the differential equation: $y' + 2xy = x$.", course: "Mathematics", student: "Charlie L.", submitted_at: "1 hour ago", priority: "High" },
-            { id: 404, q_title: "Difference between Process and Thread in OS.", course: "Operating Systems", student: "Diana M.", submitted_at: "7 hours ago", priority: "Low" },
-        ];
+const API = "http://localhost:3000/api";
+const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('total-pending').textContent = pendingAnswers.length;
-            filterAnswers();
-        });
+let pendingAnswers = [];
 
-        const listContainer = document.getElementById('review-list');
-        const emptyState = document.getElementById('empty-state');
-        const courseFilter = document.getElementById('course-filter');
+document.addEventListener("DOMContentLoaded", () => {
+    if (!professor || professor.role !== "professor") {
+        alert("Unauthorized");
+        window.location.href = "login.html";
+        return;
+    }
 
-        /**
-         * Generates the HTML card for a single pending answer.
-         */
-        function createAnswerCard(item) {
-            // Updated priority map to use Green (Emerald) for High priority
-            const priorityMap = {
-                'High': 'bg-emerald-100 text-emerald-800 border-emerald-500',
-                'Medium': 'bg-yellow-100 text-yellow-800 border-yellow-500',
-                'Low': 'bg-gray-100 text-gray-700 border-gray-500'
-            };
-            const priorityClass = priorityMap[item.priority] || 'bg-gray-100 text-gray-700 border-gray-500';
-            const borderColorClass = priorityMap[item.priority].split(' ').pop();
+    loadPendingReviews();
+});
 
-            return `
-                <div id="answer-${item.id}" class="answer-item bg-white p-4 rounded-lg shadow-md border-l-4 ${borderColorClass} flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <!-- Left Section: Details -->
-                    <div class="md:flex-grow pr-4 mb-3 md:mb-0">
-                        <h3 class="text-xl font-semibold text-gray-800">${item.q_title}</h3>
-                        <p class="text-sm text-gray-500 mt-1">
-                            <span class="font-medium text-green-600">${item.course}</span> | Submitted by: ${item.student}
-                        </p>
-                        <div class="flex items-center space-x-3 mt-2">
-                             <span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${priorityClass.replace(/border-\w+-\d+/g, '')}">
-                                Priority: ${item.priority}
-                            </span>
-                            <span class="text-xs text-gray-500">
-                                Submitted: ${item.submitted_at}
-                            </span>
-                        </div>
-                    </div>
+async function loadPendingReviews() {
+    try {
+        const res = await fetch(`${API}/professor/practice/${professor.user_id}`);
+        const data = await res.json();
 
-                    <!-- Right Section: Actions -->
-                    <div class="flex space-x-2 flex-shrink-0">
-                        <button onclick="simulateReview(${item.id})"
-                            title="Start Review"
-                            class="p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-150 flex items-center">
-                            <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            Review
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
+        pendingAnswers = data.practices;
 
-        /**
-         * Filters and renders the pending answers based on course selection.
-         */
-        window.filterAnswers = function() {
-            const selectedCourse = courseFilter.value;
+        document.getElementById("total-pending").textContent = pendingAnswers.length;
+        renderAnswers(pendingAnswers);
 
-            const filteredItems = pendingAnswers.filter(item => {
-                return selectedCourse === '' || item.course === selectedCourse;
-            });
-
-            renderAnswers(filteredItems);
-        };
-
-        /**
-         * Renders the list of pending answers.
-         */
-        function renderAnswers(items) {
-            listContainer.innerHTML = '';
-
-            if (items.length === 0) {
-                listContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            listContainer.classList.remove('hidden');
-            emptyState.classList.add('hidden');
-
-            items.forEach(item => {
-                listContainer.innerHTML += createAnswerCard(item);
-            });
-        }
-
-        /**
-         * Simulates starting the review process for an answer.
-         */
-        window.simulateReview = function(id) {
-            const item = pendingAnswers.find(i => i.id === id);
-            if (item) {
-                // In a real application, this would open a review modal or navigate to a dedicated review page
-                alert(`Starting review process for: "${item.q_title}" (ID: ${id})\n\nAction: Approve, Reject, or Edit the student's contribution.`);
-                
-                // Simulate approval and removal from pending list after review
-                if (window.confirm("Simulate APPROVAL of this answer? (Removes it from the list)")) {
-                    pendingAnswers = pendingAnswers.filter(i => i.id !== id);
-                    document.getElementById('total-pending').textContent = pendingAnswers.length;
-                    filterAnswers(); // Re-render the list
-                }
-            }
-        };
-    </script>
+    } catch (err) {
+        console.error("Failed to load practice reviews", err);
+    }
+}
+</script>
 </body>
 </html>

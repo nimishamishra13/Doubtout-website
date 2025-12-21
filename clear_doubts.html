@@ -122,8 +122,9 @@
     
     <!-- JavaScript for Data Management and Rendering -->
     <script>
-        // Mock data for unanswered student doubts
-        async function loadDoubts() {
+let unansweredDoubts = [];
+
+async function loadDoubts() {
     const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
 
     if (!professor || professor.role !== "professor") {
@@ -142,7 +143,7 @@
             q_title: d.question,
             course: d.course,
             asked_at: new Date(d.created_at).toLocaleDateString(),
-            urgency: "Medium" // you can compute later
+            urgency: "Medium"
         }));
 
         document.getElementById("total-doubts").textContent = unansweredDoubts.length;
@@ -151,156 +152,77 @@
         console.error("Failed to load doubts", err);
     }
 }
+
 document.addEventListener("DOMContentLoaded", loadDoubts);
 
-        modal.innerHTML = `
-    <div class="bg-white rounded-xl p-6 w-11/12 max-w-2xl">
-        <h3 class="text-2xl font-bold mb-4">Write Answer</h3>
+const listContainer = document.getElementById('doubts-list');
+const emptyState = document.getElementById('empty-state');
+const courseFilter = document.getElementById('course-filter');
 
-        <textarea id="answer-text"
-            class="w-full border-2 border-gray-300 rounded-lg p-3 focus-ring-green"
-            rows="6"
-            placeholder="Write your detailed answer here..."></textarea>
-
-        <div class="flex justify-end space-x-3 mt-4">
-            <button
-                class="px-4 py-2 bg-gray-300 rounded-lg text-base"
-                onclick="this.closest('.fixed').remove()">
-                Cancel
-            </button>
-
-            <button
-                class="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-base"
-                onclick="submitAnswer(${id})">
-                <span>Submit</span>
+function createDoubtCard(item) {
+    return `
+        <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500">
+            <h3 class="text-xl font-semibold">${item.q_title}</h3>
+            <p class="text-sm text-gray-500">${item.course}</p>
+            <p class="text-xs text-gray-400">Asked: ${item.asked_at}</p>
+            <button onclick="simulateAnswer(${item.id})"
+                class="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg">
+                Answer
             </button>
         </div>
-    </div>
-`;
+    `;
+}
 
-        //document.addEventListener('DOMContentLoaded', () => {
-            //document.getElementById('total-doubts').textContent = unansweredDoubts.length;
-           // filterDoubts();
-        //});
+function renderDoubts(items) {
+    listContainer.innerHTML = "";
 
-        const listContainer = document.getElementById('doubts-list');
-        const emptyState = document.getElementById('empty-state');
-        const courseFilter = document.getElementById('course-filter');
+    if (items.length === 0) {
+        listContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+    }
 
-        /**
-         * Generates the HTML card for a single unanswered doubt.
-         */
-        function createDoubtCard(item) {
-            // Urgency map: Red for High, Yellow for Medium, Gray for Low
-            const urgencyMap = {
-                'High': 'bg-red-100 text-red-800 border-red-500',
-                'Medium': 'bg-yellow-100 text-yellow-800 border-yellow-500',
-                'Low': 'bg-gray-100 text-gray-700 border-gray-500'
-            };
-            const urgencyClass = urgencyMap[item.urgency] || 'bg-gray-100 text-gray-700 border-gray-500';
-            const borderColorClass = urgencyMap[item.urgency].split(' ').pop();
+    listContainer.classList.remove("hidden");
+    emptyState.classList.add("hidden");
 
-            return `
-                <div id="doubt-${item.id}" class="doubt-item bg-white p-4 rounded-lg shadow-md border-l-4 ${borderColorClass} flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <!-- Left Section: Details -->
-                    <div class="md:flex-grow pr-4 mb-3 md:mb-0">
-                        <h3 class="text-xl font-semibold text-gray-800">${item.q_title}</h3>
-                        <p class="text-sm text-gray-500 mt-1">
-                            <span class="font-medium text-green-600">${item.course}</span>
-                        </p>
-                        <div class="flex items-center space-x-3 mt-2">
-                             <span class="inline-block px-3 py-0.5 text-xs font-medium rounded-full ${urgencyClass.replace(/border-\w+-\d+/g, '')}">
-                                Urgency: ${item.urgency}
-                            </span>
-                            <span class="text-xs text-gray-500">
-                                Asked: ${item.asked_at}
-                            </span>
-                        </div>
-                    </div>
+    items.forEach(item => {
+        listContainer.innerHTML += createDoubtCard(item);
+    });
+}
 
-                    <!-- Right Section: Actions -->
-                    <div class="flex space-x-2 flex-shrink-0">
-                        <button onclick="simulateAnswer(${item.id})"
-                            title="Provide Expert Answer"
-                            class="p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-150 flex items-center">
-                            <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4m4-4H9m4 0v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2l-2 2v-4h3.586l.707.707M11 5h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H7a2 2 0 01-2-2V7a2 2 0 012-2h4z" />
-                            </svg>
-                            Answer
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
+window.filterDoubts = function () {
+    const selectedCourse = courseFilter.value;
+    const filtered = unansweredDoubts.filter(
+        d => !selectedCourse || d.course === selectedCourse
+    );
+    renderDoubts(filtered);
+};
 
-        /**
-         * Filters and renders the unanswered doubts based on course selection.
-         */
-        window.filterDoubts = function() {
-            const selectedCourse = courseFilter.value;
-
-            const filteredItems = unansweredDoubts.filter(item => {
-                return selectedCourse === '' || item.course === selectedCourse;
-            });
-
-            renderDoubts(filteredItems);
-        };
-
-        /**
-         * Renders the list of unanswered doubts.
-         */
-        function renderDoubts(items) {
-            listContainer.innerHTML = '';
-
-            if (items.length === 0) {
-                listContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            listContainer.classList.remove('hidden');
-            emptyState.classList.add('hidden');
-
-            items.forEach(item => {
-                listContainer.innerHTML += createDoubtCard(item);
-            });
-        }
-
-        /**
-         * Simulates starting the process of providing an answer.
-         */
-        window.simulateAnswer = function(id) {
-            const modal = document.createElement("div");
+window.simulateAnswer = function (id) {
+    const modal = document.createElement("div");
     modal.className = "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50";
 
     modal.innerHTML = `
         <div class="bg-white rounded-xl p-6 w-11/12 max-w-2xl">
             <h3 class="text-2xl font-bold mb-4">Write Answer</h3>
             <textarea id="answer-text"
-                class="w-full border-2 border-gray-300 rounded-lg p-3 focus-ring-green"
-                rows="6"
-                placeholder="Write your detailed answer here..."></textarea>
-
-            <div class="flex justify-end space-x-3 mt-4">
-                <button class="px-4 py-2 bg-gray-300 rounded-lg"
-                    onclick="this.closest('.fixed').remove()">Cancel</button>
-
-                <button class="px-4 py-2 bg-green-600 text-white rounded-lg"
-                onclick="submitAnswer(${id})"
+                class="w-full border-2 rounded-lg p-3"
+                rows="6"></textarea>
+            <div class="flex justify-end gap-3 mt-4">
+                <button onclick="this.closest('.fixed').remove()"
+                    class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
+                <button onclick="submitAnswer(${id})"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg">Submit</button>
             </div>
         </div>
     `;
 
     document.body.appendChild(modal);
-        };
-        async function submitAnswer(doubtId) {
+};
+
+async function submitAnswer(doubtId) {
     const answerText = document.getElementById("answer-text").value.trim();
     const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
-
-if (!professor || professor.role !== "professor") {
-    alert("Unauthorized access");
-    return;
-}
 
     if (!answerText) {
         alert("Answer cannot be empty");
@@ -319,17 +241,16 @@ if (!professor || professor.role !== "professor") {
         });
 
         if (res.ok) {
-            alert("Answer submitted successfully");
+            alert("Answer submitted");
             location.reload();
         } else {
-            alert("Failed to submit answer");
+            alert("Failed to submit");
         }
     } catch (err) {
-        console.error(err);
         alert("Server error");
     }
 }
+</script>
 
-    </script>
 </body>
 </html>

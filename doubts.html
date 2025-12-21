@@ -74,7 +74,6 @@
                 <nav class="hidden md:flex space-x-4">
                     <a href="/home.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Home</a>
                     <a href="/answer_archive.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Answer Archive</a>
-                    <a href="/ask_a_doubt.html" class="px-3 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 transition duration-150 ease-in-out">Ask a Doubt</a>
                     <a href="/login.html" class="px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-700 transition duration-150 ease-in-out">Login / Sign Up</a>
                 </nav>
             </div>
@@ -114,29 +113,12 @@
                         <label for="branch" class="block text-sm font-medium text-gray-700 mb-2">Select Branch:</label>
                         <select id="branch" name="branch" required class="form-input-field">
                             <option value="" disabled selected>--Select Branch--</option>
-                            <option value="civil">Civil Engineering</option>
-                            <option value="mech">Mechanical Engineering</option>
-                            <option value="eee">Electrical and Electronics Engineering</option>
-                            <option value="ece">Electronics and Communication Engineering</option>
-                            <option value="iem">Industrial Engineering and Management</option>
-                            <option value="cse">Computer Science and Engineering</option>
-                            <option value="ete">Electronics and Telecommunication Engineering</option>
-                            <option value="ise">Information Science and Engineering</option>
-                            <option value="eie">Electronics and Instrumentation Engineering</option>
-                            <option value="mee">Medical Electronics Engineering</option>
-                            <option value="che">Chemical Engineering</option>
-                            <option value="bt">Bio-Technology</option>
-                            <option value="mca">Computer Applications (MCA)</option>
-                            <option value="msrc">Management Studies and Research Centre</option>
-                            <option value="math">Mathematics Department</option>
-                            <option value="phy">Physics Department</option>
-                            <option value="chem">Chemistry Department</option>
-                            <option value="aero">Aerospace Engineering</option>
-                            <option value="ml">Machine Learning (AI and ML)</option>
-                            <option value="csds">Computer Science and Engineering (DS)</option>
-                            <option value="csiot">Computer Science and Engineering (IoT and CS)</option>
-                            <option value="aid">Artificial Intelligence and Data Science</option>
-                            <option value="csbs">Computer Science and Business Systems</option>
+                            <option value="3">Civil Engineering</option>
+                            <option value="2">Mechanical Engineering</option>
+                            <option value="5">Electronics and Communication Engineering</option>
+                            <option value="1">Computer Science and Engineering</option>
+                            <option value="4">Chemical Engineering</option>
+                            <option value="6">Machine Learning (AI and ML)</option>
                         </select>
                     </div>
 
@@ -146,7 +128,7 @@
                         <select id="semester" name="semester" required class="form-input-field">
                             <option value="" disabled selected>--Select Semester--</option>
                             <option value="1">Semester 1</option>
-                            <option value="2">Semester 2</option>
+                            <option value="1">Semester 2</option>
                             <option value="3">Semester 3</option>
                             <option value="4">Semester 4</option>
                             <option value="5">Semester 5</option>
@@ -159,13 +141,10 @@
                     <!-- Course Selection -->
                     <div>
                         <label for="course" class="block text-sm font-medium text-gray-700 mb-2">Select Course:</label>
-                        <select id="course" name="course" required class="form-input-field">
-                            <option value="" disabled selected>--Select Course--</option>
-                            <option value="maths">Mathematics</option>
-                            <option value="dsa">Data Structures</option>
-                            <option value="os">Operating Systems</option>
-                            <option value="networks">Computer Networks</option>
+                        <select id="course" class="form-input-field">
+                            <option value="">-- Select Subject --</option>
                         </select>
+
                     </div>
                 </div>
 
@@ -198,144 +177,93 @@
 
     
     <!-- JavaScript for Form Submission using localStorage and Backend API -->
-    <script>
-        document.getElementById('doubt-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+<script>
+const API_URL = "http://localhost:3000/api";
 
-            console.log("Submit clicked");
+const branchSelect = document.getElementById("branch");
+const semesterSelect = document.getElementById("semester");
+const courseSelect = document.getElementById("course");
+const form = document.getElementById("doubt-form");
 
-            // 1. Get User ID from localStorage
-            const userString = localStorage.getItem("doubtoutUser");
-            const user = userString ? JSON.parse(userString) : null;
-            
-            // Check for user login
-            if (!user || !user.user_id) {
-                console.error("User not logged in or user_id missing in localStorage. Simulating user ID for demo.");
-                // Fallback for sandboxed environments where login wasn't executed
-                const mockUserId = 'mock_user_12345';
-                user = { user_id: mockUserId };
-                showTemporaryMessage("Using mock user ID for submission (Please log in on /login.html for real usage).", 'bg-yellow-600');
-            }
-            
-            const submitButton = document.getElementById('submit-button');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
+async function loadSubjects() {
+    const departmentId = branchSelect.value;
+    const semester = semesterSelect.value;
 
-            const payload = {
-                user_id: user.user_id,
-                branch: document.getElementById('branch').value,
-                semester: document.getElementById('semester').value,
-                course: document.getElementById('course').value,
-                question: document.getElementById('question').value.trim(),
-                professor: document.getElementById('professor').value
-            };
-            
-            const card = document.querySelector(".hand-drawn-card");
-
-            try {
-                // Attempt to reach the local server endpoint
-                const res = await fetch("http://localhost:3000/api/doubts", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-
-                // Try to parse JSON response
-                const data = await res.json();
-                console.log("Server response:", data);
-
-                if (res.ok) {
-                    // Successful API response (HTTP 201)
-                    displaySuccessMessage(card);
-                } else {
-                    // API call succeeded but returned an error status (400, 500, etc.)
-                    console.error("Error submitting doubt:", data.error || res.statusText);
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Submit Your Doubt';
-                    showTemporaryMessage(`Submission failed: ${data.error || 'Server Error'}`, 'bg-red-600');
-                }
-
-            } catch (err) {
-                // Network error (e.g., server not reachable/CORS block in sandbox)
-                console.error("Network error, simulating success for sandbox demo:", err);
-                
-                // Simulate success with a brief delay to show the intended UI flow
-                setTimeout(() => {
-                    displaySuccessMessage(card);
-                }, 500);
-            }
-            document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "http://localhost:3000/api";
-    const professorSelect = document.getElementById("professor");
-
-    try {
-        const res = await fetch(`${API_URL}/professors`);
-        const data = await res.json();
-
-        data.professors.forEach(p => {
-            const option = document.createElement("option");
-            option.value = p.user_id;          // backend receives their ID
-            option.textContent = p.full_name;  // student sees name
-            professorSelect.appendChild(option);
-        });
-
-    } catch (err) {
-        console.error("Error loading professor list:", err);
+    if (!departmentId || !semester) {
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+        return;
     }
-});
 
-            // Utility functions (for message box)
-            function showTemporaryMessage(message, bgColor) {
-                const messageContainer = document.createElement('div');
-                messageContainer.className = `fixed bottom-4 right-4 p-4 rounded-xl shadow-xl text-white font-semibold z-50 ${bgColor}`;
-                messageContainer.textContent = message;
-                document.body.appendChild(messageContainer);
-                setTimeout(() => {
-                    messageContainer.remove();
-                }, 3000);
-            }
-            
-            function displaySuccessMessage(card) {
-                card.innerHTML = `
-                    <div class="p-8 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-green-500 mb-4" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">Doubt Submitted!</h3>
-                        <p class="text-gray-600 mt-2">Your question is now visible to mentors and professors for solving.</p>
-                        <a href="student_dashboard.html" class="cta-button-blue inline-block mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg font-bold">
-                            Go to Dashboard
-                        </a>
-                    </div>
-                `;
-            }
-        });
-const API_URL = 'http://localhost:3000/api';
-
-async function loadProfessors() {
     try {
-        const res = await fetch(`${API_URL}/professors`);
+        const res = await fetch(
+            `${API_URL}/subjects?department_id=${departmentId}&semester=${semester}`
+        );
         const data = await res.json();
 
-        const dropdown = document.getElementById('professor');
-        dropdown.innerHTML = `<option value="">Select Professor</option>`;
-
-        data.professors.forEach(p => {
-            const option = document.createElement('option');
-            option.value = p.user_id;
-            option.textContent = p.full_name;
-            dropdown.appendChild(option);
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+        data.subjects.forEach(sub => {
+            const opt = document.createElement("option");
+            opt.value = sub.subject_name;
+            opt.textContent = sub.subject_name;
+            courseSelect.appendChild(opt);
         });
-
-    } catch (error) {
-        console.error("Failed to load professors:", error);
+    } catch {
+        courseSelect.innerHTML = `<option>Error loading subjects</option>`;
     }
 }
 
+branchSelect.addEventListener("change", loadSubjects);
+semesterSelect.addEventListener("change", loadSubjects);
+
+async function loadProfessors() {
+    const res = await fetch(`${API_URL}/professors`);
+    const data = await res.json();
+    const dropdown = document.getElementById("professor");
+
+    dropdown.innerHTML = `<option value="">-- Select Professor --</option>`;
+    data.professors.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.user_id;
+        opt.textContent = p.full_name;
+        dropdown.appendChild(opt);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", loadProfessors);
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem("doubtoutUser"));
+    if (!user) {
+        alert("Please login");
+        return;
+    }
+
+    const payload = {
+        user_id: user.user_id,
+        branch: Number(branchSelect.value),
+        semester: Number(semesterSelect.value),
+        course: courseSelect.value,
+        question: document.getElementById("question").value.trim(),
+        professor: document.getElementById("professor").value || null
+    };
+
+    const res = await fetch(`${API_URL}/doubts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+        document.querySelector(".hand-drawn-card").innerHTML =
+            `<h2 class="text-center text-green-600 text-2xl font-bold">
+                Doubt submitted successfully!
+             </h2>`;
+    } else {
+        alert("Submission failed");
+    }
+});
 </script>
-
-
-
 </body>
 </html>
