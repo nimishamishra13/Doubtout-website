@@ -149,7 +149,7 @@ async function loadArchiveSubjects() {
         return;
     }
 
-    const departmentId = 1; // or infer from course later
+    const departmentId = 1; 
 
     const res = await fetch(
         `${API_URL}/subjects?department_id=${departmentId}&semester=${semester}`
