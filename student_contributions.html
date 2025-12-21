@@ -83,11 +83,7 @@
                 <p id="accepted-answers" class="text-3xl font-bold text-gray-900 mt-1">0</p>
             </div>
             
-            <!-- Average Rating (Mock) -->
-            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-yellow-500">
-                <p class="text-sm font-medium text-gray-500">Average Rating</p>
-                <p id="average-rating" class="text-3xl font-bold text-gray-900 mt-1">4.5 / 5</p>
-            </div>
+           
         </div>
 
         <!-- Filter and List Container -->
@@ -125,106 +121,73 @@
     
     <!-- JavaScript for Data Management and Rendering -->
     <script>
-        // Mock data for student's contributions (questions they answered)
-        const contributions = [
-            { id: 201, q_title: "How to reverse a Linked List in O(n) time?", course: "DSA", date: "2024-10-22", rating: 5, accepted: true },
-            { id: 202, q_title: "Explain the Dining Philosophers Problem and its solution.", course: "Operating Systems", date: "2024-10-23", rating: 4, accepted: true },
-            { id: 203, q_title: "Integrate $\\sin(x) / (1+\\cos^2(x))$.", course: "Mathematics", date: "2024-10-25", rating: 4, accepted: false },
-            { id: 204, q_title: "Difference between Hub, Switch, and Router.", course: "Computer Networks", date: "2024-10-26", rating: 5, accepted: true },
-        ];
+const API_URL = "http://localhost:3000/api";
+const user = JSON.parse(localStorage.getItem("doubtoutUser"));
+const studentId = user?.user_id;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const listContainer = document.getElementById('contribution-list');
-            const courseFilter = document.getElementById('course-filter');
-            const emptyState = document.getElementById('empty-state');
-            
-            const totalAnswersEl = document.getElementById('total-answers');
-            const acceptedAnswersEl = document.getElementById('accepted-answers');
-            
-            // --- Metrics Calculation ---
-            const totalAnswers = contributions.length;
-            const acceptedAnswers = contributions.filter(c => c.accepted).length;
-            
-            totalAnswersEl.textContent = totalAnswers;
-            acceptedAnswersEl.textContent = acceptedAnswers;
+document.addEventListener("DOMContentLoaded", async () => {
+    if (!studentId) {
+        alert("Please login first");
+        window.location.href = "login.html";
+        return;
+    }
 
-            // Mock rating calculation (for demonstration)
-            const totalRating = contributions.reduce((sum, c) => sum + c.rating, 0);
-            const avgRating = totalAnswers > 0 ? (totalRating / totalAnswers).toFixed(1) : 'N/A';
-            document.getElementById('average-rating').textContent = `${avgRating} / 5`;
+    try {
+        const res = await fetch(`${API_URL}/student/contributions/${studentId}`);
+        const data = await res.json();
 
+        renderContributions(data.contributions || []);
+    } catch (err) {
+        console.error("Failed to load contributions", err);
+    }
+});
 
-            /**
-             * Renders the list of filtered contributions.
-             */
-            function renderContributions() {
-                listContainer.innerHTML = '';
-                const selectedCourse = courseFilter.value;
+function renderContributions(contributions) {
+    const listContainer = document.getElementById("contribution-list");
+    const emptyState = document.getElementById("empty-state");
 
-                const filtered = contributions.filter(c => 
-                    selectedCourse === '' || c.course === selectedCourse
-                );
+    document.getElementById("total-answers").textContent = contributions.length;
+    document.getElementById("accepted-answers").textContent = contributions.length;
+    document.getElementById("average-rating").textContent = "Approved";
 
-                if (filtered.length === 0) {
-                    listContainer.classList.add('hidden');
-                    emptyState.classList.remove('hidden');
-                    return;
-                }
+    listContainer.innerHTML = "";
 
-                listContainer.classList.remove('hidden');
-                emptyState.classList.add('hidden');
+    if (contributions.length === 0) {
+        listContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+    }
 
-                filtered.forEach(c => {
-                    const statusText = c.accepted ? 'Accepted by Student' : 'Under Review';
-                    const statusColor = c.accepted ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700';
-                    const ratingText = `${c.rating} / 5`;
-                    
-                    const item = document.createElement('div');
-                    item.className = 'bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer';
-                    item.innerHTML = `
-                        <!-- Contribution Summary -->
-                        <div class="mb-3 md:mb-0 md:flex-grow">
-                            <h3 class="text-lg font-semibold text-gray-800 hover:text-blue-700">${c.q_title}</h3>
-                            <p class="text-sm text-gray-500 mt-1">
-                                <span class="font-medium text-blue-600">${c.course}</span> | Answered on: ${c.date}
-                            </p>
-                        </div>
+    listContainer.classList.remove("hidden");
+    emptyState.classList.add("hidden");
 
-                        <!-- Metadata & Action Button -->
-                        <div class="flex items-center space-x-4 flex-shrink-0">
-                            <!-- Status Badge -->
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
-                                ${statusText}
-                            </span>
-                            <!-- Rating Badge (Using mock star icon) -->
-                            <div class="flex items-center text-sm font-medium text-yellow-600">
-                                <svg class="w-4 h-4 mr-1 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M10 15l-5.878 3.09 1.123-6.545L.487 7.425l6.561-.955L10 1l2.952 5.47 6.561.955-4.758 4.09 1.123 6.545z"/>
-                                </svg>
-                                <span>${ratingText}</span>
-                            </div>
-                            <button onclick="simulateViewContribution(${c.id})"
-                                class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-1.5 px-3 rounded-lg shadow-sm transition duration-150 text-sm">
-                                View Contribution
-                            </button>
-                        </div>
-                    `;
-                    listContainer.appendChild(item);
-                });
-            }
+    contributions.forEach(c => {
+        const item = document.createElement("div");
+        item.className =
+            "bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200";
 
-            // Event Listener for the Course Filter
-            courseFilter.addEventListener('change', renderContributions);
+        item.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-800">${c.question}</h3>
 
-            // Global function to simulate viewing the full contribution details
-            window.simulateViewContribution = (id) => {
-                const c = contributions.find(c => c.id === id);
-                alert(`Viewing your detailed answer for: "${c.q_title}"\n\nThis would open a full page showing the original question and your submitted solution/explanation.`);
-            };
+            <p class="text-sm text-gray-500 mt-1">
+                <span class="font-medium text-blue-600">${c.course}</span>
+            </p>
 
-            // Initial render
-            renderContributions();
-        });
-    </script>
+            <div class="mt-3 flex justify-between items-center">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Approved by Professor
+                </span>
+
+                <span class="text-sm text-gray-700">
+                    <strong>${c.professor_name}</strong>
+                </span>
+            </div>
+        `;
+
+        listContainer.appendChild(item);
+    });
+}
+</script>
+
 </body>
 </html>

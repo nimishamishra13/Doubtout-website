@@ -4,255 +4,164 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doubtout - My Questions</title>
-    <!-- Load Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom font import and general base styles */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f8ff; /* Light blue background */
+            background-color: #f0f8ff;
         }
-        
-        /* Custom scrollbar for question list */
         .question-list-scroll::-webkit-scrollbar {
             width: 6px;
         }
         .question-list-scroll::-webkit-scrollbar-thumb {
-            background: #93c5fd; /* Blue-300 */
+            background: #93c5fd;
             border-radius: 3px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Main Header (Dark theme with Blue Accent) -->
-    <header class="bg-gray-900 text-white shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-3">
-                
-                <!-- Logo Block (Blue Accent) -->
-                <div class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span class="text-xl font-bold tracking-tight text-blue-400">DoubtOut</span>
-                </div>
+<header class="bg-gray-900 text-white shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center space-x-2">
+        <span class="text-xl font-bold text-blue-400">DoubtOut</span>
+    </div>
+</header>
 
-                <!-- Global Navigation Links -->
-                
-            </div>
-        </div>
-    </header>
-    
-    <!-- Sub-Navigation / Dashboard Links -->
-    <nav class="bg-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
-            <a href="student_dashboard.html" id="nav-dashboard" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Dashboard</a>
-            <a href="student_questions.html" id="nav-questions" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">My Questions</a>
-            <a href="student_contributions.html" id="nav-contributions" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
-            <a href="doubts.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Ask a Doubt</a>
-            <a href="practice_session.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Practice Sessions</a>
-        </div>
-    </nav>
+<nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-center space-x-8">
+        <a href="student_dashboard.html">My Dashboard</a>
+        <a href="student_questions.html" class="text-blue-600 font-bold border-b-2 border-blue-600">My Questions</a>
+        <a href="student_contributions.html">My Contributions</a>
+        <a href="doubts.html">Ask a Doubt</a>
+        <a href="practice_session.html">Practice Sessions</a>
+    </div>
+</nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-8">
-            My Submitted Doubts
-        </h1>
+<main class="max-w-7xl mx-auto px-4 py-10">
+    <h1 class="text-4xl font-extrabold text-center mb-8">My Submitted Doubts</h1>
 
-        <!-- Content Area -->
-        <div class="bg-white p-6 rounded-xl shadow-lg">
-
-            <!-- Tab Navigation -->
-            <div class="flex border-b border-gray-200 mb-6">
-                <button id="tab-active" data-status="active" 
-                        class="tab-btn py-3 px-6 text-lg font-medium border-b-2 border-blue-600 text-blue-600 transition duration-150 focus:outline-none">
-                    Active Questions (<span id="count-active">2</span>)
-                </button>
-                <button id="tab-answered" data-status="answered" 
-                        class="tab-btn py-3 px-6 text-lg font-medium border-b-2 border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-300 transition duration-150 focus:outline-none">
-                    Answered Questions (<span id="count-answered">3</span>)
-                </button>
-            </div>
-
-            <!-- List Container -->
-            <div id="question-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto question-list-scroll">
-                <!-- Questions will be rendered here -->
-            </div>
-            
-            <!-- Message when list is empty -->
-            <div id="empty-state" class="hidden text-center py-16 text-gray-500">
-                <svg class="mx-auto h-12 w-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <p class="mt-2 text-xl font-medium">You have no questions in this category.</p>
-                <p class="text-sm">Why not <a href="doubts.html" class="text-blue-600 hover:underline">Ask a Doubt</a> now?</p>
-            </div>
+    <div class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="flex border-b mb-6">
+            <button data-status="active"
+                class="tab-btn border-b-2 border-blue-600 text-blue-600 px-6 py-3 font-medium">
+                Active Questions (<span id="count-active">0</span>)
+            </button>
+            <button data-status="answered"
+                class="tab-btn border-b-2 border-transparent text-gray-500 px-6 py-3 font-medium">
+                Answered Questions (<span id="count-answered">0</span>)
+            </button>
         </div>
 
-    </main>
+        <div id="question-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto"></div>
 
-    
-    <!-- JavaScript for Tab Switching and Data Rendering -->
-    <script>
-        // Mock data for the student's personal questions
+        <div id="empty-state" class="hidden text-center py-12 text-gray-500">
+            You have no questions in this category.
+        </div>
+    </div>
+</main>
+
+<script>
 const API_URL = "http://localhost:3000/api";
+const user = JSON.parse(localStorage.getItem("doubtoutUser"));
+const userId = user?.user_id;
 
-// Get user from localStorage
-const loggedUser = JSON.parse(localStorage.getItem("doubtoutUser"));
-const userId = loggedUser?.user_id;
-
-// Tabs
 let currentStatusFilter = "active";
+let allQuestions = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     if (!userId) {
-        alert("You are not logged in!");
-        window.location.href = "login1.html";
+        alert("Please login first");
+        window.location.href = "login.html";
         return;
     }
 
     loadQuestions();
 
-    const tabButtons = document.querySelectorAll(".tab-btn");
-    tabButtons.forEach(btn => btn.addEventListener("click", handleTabClick));
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".tab-btn").forEach(b => {
+                b.classList.remove("border-blue-600", "text-blue-600");
+                b.classList.add("border-transparent", "text-gray-500");
+            });
+
+            btn.classList.add("border-blue-600", "text-blue-600");
+            btn.classList.remove("border-transparent", "text-gray-500");
+
+            currentStatusFilter = btn.dataset.status;
+            renderQuestions();
+        });
+    });
 });
 
-/** Load questions from backend */
 async function loadQuestions() {
     try {
         const res = await fetch(`${API_URL}/student/questions/${userId}`);
         const data = await res.json();
-        window.allQuestions = data.questions;  // Save globally
-
-        renderQuestions();
+        allQuestions = data.questions || [];
         updateCounts();
-
-    } catch (error) {
-        console.error("Error loading questions:", error);
+        renderQuestions();
+    } catch (err) {
+        console.error("Failed to load questions", err);
     }
-}
-
-/** Renders questions based on filter */
-function renderQuestions() {
-    const listContainer = document.getElementById("question-list-container");
-    const emptyState = document.getElementById("empty-state");
-
-    listContainer.innerHTML = "";
-
-    const filtered = window.allQuestions.filter(q => {
-        if (currentStatusFilter === "answered") {
-            return q.answer_text && q.answer_text.trim() !== "";
-        }
-        return !q.answer_text;
-    });
-
-    listContainer.classList.remove("hidden");
-    emptyState.classList.add("hidden");
-
-    if (filtered.length === 0) {
-        listContainer.classList.add("hidden");
-        emptyState.classList.remove("hidden");
-        return;
-    }
-
-    filtered.forEach(q => {
-        const isAnswered = !!q.answer_text;
-
-        const statusText = isAnswered ? "Answered" : "Pending Answer";
-        const statusColor = isAnswered
-            ? "bg-green-100 text-green-800 border-green-300"
-            : "bg-yellow-100 text-yellow-800 border-yellow-300";
-
-        const preview =
-            q.answer_text && q.answer_text.length > 120
-                ? q.answer_text.slice(0, 120) + "..."
-                : q.answer_text || "";
-
-        const item = document.createElement("div");
-        item.className =
-            "bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition duration-200";
-
-        item.innerHTML = `
-            <h3 class="text-xl font-bold text-gray-800">${q.question}</h3>
-
-            <p class="text-sm text-gray-500 mt-1">
-                ${q.course || "General"} |
-                Asked on: ${new Date(q.created_at).toLocaleDateString()}
-            </p>
-
-            <div class="flex justify-between items-center mt-4">
-                <span class="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium ${statusColor} border">
-                    ${statusText}
-                </span>
-
-                ${
-                    isAnswered
-                        ? `<button onclick="showAnswer(${q.question_id})"
-                            class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
-                            View Full Answer
-                          </button>`
-                        : `<span class="text-sm text-yellow-700 font-semibold">
-                            Pending Review
-                          </span>`
-                }
-            </div>
-
-            ${
-                isAnswered
-                    ? `
-                    <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <p class="text-sm text-gray-700">
-                        <span class="font-semibold">Answered by:</span>
-                        ${q.answered_by_name || "Faculty"}
-                        </p>
-                        <p class="mt-2 text-gray-800">
-                            ${preview}
-                        </p>
-                    </div>
-                    `
-                    : ""
-            }
-        `;
-
-        listContainer.appendChild(item);
-    });
 }
 
 function updateCounts() {
     document.getElementById("count-active").textContent =
-        window.allQuestions.filter(q => !q.answer_text).length;
+        allQuestions.filter(q => !q.answer_text).length;
 
     document.getElementById("count-answered").textContent =
-        window.allQuestions.filter(q => q.answer_text).length;
+        allQuestions.filter(q => q.answer_text).length;
 }
 
-function handleTabClick(event) {
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.remove("border-blue-600", "text-blue-600");
-        btn.classList.add("border-transparent", "text-gray-500");
+function renderQuestions() {
+    const container = document.getElementById("question-list-container");
+    const emptyState = document.getElementById("empty-state");
+    container.innerHTML = "";
+
+    const filtered = allQuestions.filter(q => {
+        const answered = q.answer_text && q.answer_text.trim() !== "";
+        return currentStatusFilter === "answered" ? answered : !answered;
     });
 
-    event.currentTarget.classList.add("border-blue-600", "text-blue-600");
-    event.currentTarget.classList.remove("border-transparent", "text-gray-500");
+    if (filtered.length === 0) {
+        emptyState.classList.remove("hidden");
+        return;
+    }
 
-    currentStatusFilter = event.currentTarget.dataset.status;
-    renderQuestions();
+    emptyState.classList.add("hidden");
+
+    filtered.forEach(q => {
+        const isAnswered = q.answer_text && q.answer_text.trim() !== "";
+        const card = document.createElement("div");
+        card.className = "p-4 border rounded-lg shadow";
+
+        card.innerHTML = `
+            <h3 class="text-xl font-bold">${q.question}</h3>
+            
+
+
+            <div class="mt-3">
+                <span class="px-3 py-1 rounded-full text-sm ${
+                    isAnswered ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                }">
+                    ${isAnswered ? "Answered" : "Pending"}
+                </span>
+            </div>
+
+            ${
+                isAnswered
+                ? `<div class="mt-4 bg-blue-50 p-4 rounded">
+                        <p class="text-sm"><strong>Answered by:</strong> ${q.answered_by_name}</p>
+                        <p class="mt-2">${q.answer_text}</p>
+                   </div>`
+                : ""
+            }
+        `;
+        container.appendChild(card);
+    });
 }
+</script>
 
-
-function showAnswer(id) {
-    const q = window.allQuestions.find(x => x.question_id === id);
-    alert(`Answer:\n\n${q.answer_text}`);
-}
-
-function showPending(id) {
-    const q = window.allQuestions.find(x => x.question_id === id);
-    alert(`Your question "${q.question}" is still pending review.`);
-}
-
-    </script>
 </body>
 </html>

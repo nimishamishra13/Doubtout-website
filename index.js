@@ -79,6 +79,8 @@ app.post('/api/doubts', async (req, res) => {
 });
 
 app.get('/api/student/questions/:user_id', async (req, res) => {
+      const user_id = Number(req.params.user_id); // ✅ DEFINE IT
+
     const questions = await db('doubts')
   .leftJoin('answers', 'doubts.doubt_id', 'answers.doubt_id')
   .leftJoin('users', 'answers.answered_by', 'users.user_id')
