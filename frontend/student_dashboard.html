@@ -177,7 +177,7 @@ async function loadDashboardData() {
     // Fetch fresh points from backend
     try {
         const res = await fetch(
-            `http://doubtout-website.onrender.com/api/users/${savedUser.user_id}/points`
+            `https://doubtout-website.onrender.com/api/users/${savedUser.user_id}/points`
         );
         const data = await res.json();
 
@@ -193,7 +193,6 @@ async function loadDashboardData() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadDashboardData);
 
 document.addEventListener("DOMContentLoaded", loadDashboardData);
 </script>
