@@ -124,7 +124,7 @@
     
     <!-- JavaScript for Data Management and Rendering -->
     <script>
-const API = "http://localhost:3000/api";
+const API = "http://doubtout-website.onrender.com/api";
 const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
 
 let pendingAnswers = [];
@@ -212,7 +212,7 @@ async function reviewAnswer(practiceId, action) {
 
     try {
         const res = await fetch(
-            "http://localhost:3000/api/professor/practice/review",
+            "http://doubtout-website.onrender.com/api/professor/practice/review",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
