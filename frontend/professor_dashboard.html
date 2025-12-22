@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubtout - Professor Dashboard</title>
+    <!-- Load Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import and general base styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Lighter, warmer background, matching the application theme */
+            background-color: #f0f8ff; 
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px; /* Wider sidebar for better padding */
+            height: 100vh;
+            padding-top: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Dark theme for navigation */
+            background-color: #1f2937; /* Gray-800 */
+            color: #e6f0ed;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #d1d5db; /* Gray-400 */
+            font-size: 1.125rem;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #374151; /* Gray-700 */
+            color: #10b981; /* Emerald-500 accent for Professor */
+        }
+
+        .sidebar a.active {
+             background-color: #10b981; /* Emerald-500 accent */
+             color: #1f2937; /* Dark text */
+             font-weight: 700;
+             border-right: 4px solid #10b981;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px; /* Offset to match sidebar width */
+            padding: 0; /* Remove default padding */
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Utility for the 'hand-drawn' style if needed on blocks */
+        .hand-drawn-block {
+            border: 4px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px rgba(31, 41, 55, 0.2); 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar shadow-xl">
+        <div class="text-center mb-6 px-4">
+            <div class="flex items-center justify-center space-x-2 pb-4 border-b border-gray-700">
+                <!-- Icon: Graduation Cap -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 2a6 6 0 00-6 6v3a4 4 0 00-4 4v1a2 2 0 002 2h16a2 2 0 002-2v-1a4 4 0 00-4-4V8a6 6 0 00-6-6zm0 2a4 4 0 014 4v3a2 2 0 01-2 2h-4a2 2 0 01-2-2V8a4 4 0 014-4z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                </svg>
+                <h2 class="text-2xl font-bold tracking-wider text-emerald-400">Faculty Hub</h2>
+            </div>
+        </div>
+        
+        <ul class="list-none p-0">
+            <li><a href="professor_dashboard" class="active">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0h-6"></path></svg>
+                Overview
+            </a></li>
+            <li><a href="pending_review.html">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m-4-3a7 7 0 1114 0 7 7 0 01-14 0z"></path></svg>
+                Review Pending Doubts
+            </a></li>
+            <li><a href="my_solutions.html">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                My Verified Solutions
+            </a></li>
+            <li><a href="clear_doubts.html">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                Clear Doubts
+            </a></li>
+            
+        </ul>
+        <a href="login1.html" class="absolute bottom-0 w-full py-4 text-center text-sm font-semibold text-gray-400 hover:text-red-500 transition duration-150 border-t border-gray-700">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7" /></svg>
+            Logout
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="bg-gray-800 text-white shadow-lg p-4 flex justify-between items-center sticky top-0 z-10">
+            <div class="flex items-center space-x-2">
+                <!-- Logo Block -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 2a6 6 0 00-6 6v3a4 4 0 00-4 4v1a2 2 0 002 2h16a2 2 0 002-2v-1a4 4 0 00-4-4V8a6 6 0 00-6-6zm0 2a4 4 0 014 4v3a2 2 0 01-2 2h-4a2 2 0 01-2-2V8a4 4 0 014-4z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                </svg>
+                <h1 class="text-2xl font-bold tracking-tight text-white">Doubtout Faculty Hub</h1>
+            </div>
+
+            
+        </header>
+
+        <div class="p-8">
+            <div class="welcome-block mb-8 p-6 bg-white rounded-xl hand-drawn-block">
+                <!-- Dynamic greeting for the professor -->
+                <p class="text-3xl font-extrabold text-gray-800">Welcome, <span id="user-name" class="text-emerald-500">Dr. Verma</span>!</p>
+                <p class="text-lg text-gray-500 mt-2">Ready to guide our students and verify solutions?</p>
+            </div>
+            
+            <!--<section class="mt-12">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Core Responsibilities</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <a href="#pending" class="p-6 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl hand-drawn-block flex flex-col items-center justify-center transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 2m0 0l-2-2m2 2V9m-4.774 4.09l2.88 2.88a1 1 0 001.414 0l2.88-2.88m-4.321 4.32a9 9 0 11-1.414-1.414l-2.88-2.88a1 1 0 000-1.414l2.88-2.88a1 1 0 001.414 0l2.88 2.88a1 1 0 001.414 0l2.88-2.88a1 1 0 000-1.414l-2.88-2.88"></path></svg>
+                        <span class="text-xl font-semibold">Verify New Solutions</span>
+                    </a>
+                    
+                    <a href="#solutions" class="p-6 bg-gray-700 hover:bg-gray-600 text-white rounded-xl hand-drawn-block flex flex-col items-center justify-center transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-xl font-semibold">My Solution History</span>
+                    </a>
+
+                    <a href="#announcements" class="p-6 bg-blue-500 hover:bg-blue-600 text-white rounded-xl hand-drawn-block flex flex-col items-center justify-center transition duration-200">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292m0 0a4 4 0 100 5.292M12 18V4.354m0 0L20 9l-8 4.646L4 9l8-4.646z"></path></svg>
+                        <span class="text-xl font-semibold">Publish Message</span>
+                    </a>
+
+                    <a href="#analytics" class="p-6 bg-orange-500 hover:bg-orange-600 text-white rounded-xl hand-drawn-block flex flex-col items-center justify-center transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m12-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-xl font-semibold">View Student Metrics</span>
+                    </a>
+                </div>
+            </section>-->
+
+        </div>
+    </div>
+
+    <!-- JavaScript for Dynamic Data -->
+    <script>
+        // Mock data for Professor
+        function loadDashboardData() {
+    const savedUser = JSON.parse(localStorage.getItem("doubtoutUser"));
+
+    if (!savedUser) {
+        window.location.href = "professor_login.html"; // not logged in
+        return;
+    }
+
+    // Update Name
+    document.getElementById("user-name").textContent =
+        savedUser.fullName.split(" ")[0];   // first name only OR use savedUser.fullName
+
+    // Points (hardcoded or dynamic when backend ready)
+    //document.getElementById("user-points").textContent = "0";
+}
+        // Initialize the data load when the DOM is ready
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>

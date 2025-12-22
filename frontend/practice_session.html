@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubtout - Practice Session</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f8ff;
+        }
+
+        .form-input-field {
+            padding: 10px 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .form-input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .cta-button-blue {
+            transition: all 0.15s ease-in-out;
+            border-bottom: 4px solid rgba(0,0,0,0.2);
+        }
+
+        .cta-button-blue:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="bg-gray-900 text-white shadow-xl">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-xl font-bold text-blue-400">doubtout</span>
+        </div>
+
+        <nav class="hidden md:flex space-x-4">
+            <a href="/home.html" class="px-3 py-2 rounded-lg hover:bg-gray-700">Home</a>
+            <a href="/answer_archive.html" class="px-3 py-2 rounded-lg hover:bg-gray-700">Answer Archive</a>
+            <a href="/doubts.html" class="px-3 py-2 rounded-lg hover:bg-gray-700">Ask a Doubt</a>
+        </nav>
+    </div>
+</header>
+
+<!-- SUB NAV -->
+<nav class="bg-white shadow-md">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base">
+            <a href="student_dashboard.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Dasboard</a>  
+            <a href="student_questions.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Questions</a>
+            <a href="student_contributions.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">My Contributions</a>
+            <a href="doubts.html" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-150">Ask a Doubt</a>
+            <a href="practice_session.html" class="text-blue-600 border-b-2 border-blue-600 font-bold transition duration-150">Practice Sessions</a>
+        </div>
+    </nav>
+
+</nav>
+
+<!-- MAIN -->
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-8">
+        Practice Session Builder
+    </h1>
+
+    <!-- FILTERS -->
+    <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+            <!-- Department -->
+            <div>
+                <label class="font-semibold">Department</label>
+                <select id="branch" class="form-input-field text-gray-800">
+                    <option value="">-- Select Department --</option>
+                    <option value="1">CSE</option>
+                    <option value="2">MECH</option>
+                    <option value="3">CIVIL</option>
+                    <option value="4">CHEMICAL</option>
+                    <option value="5">ECE</option>
+                    <option value="6">AIML</option>
+                </select>
+            </div>
+
+            <!-- Semester -->
+            <div>
+                <label class="font-semibold">Semester</label>
+                <select id="semester" class="form-input-field text-gray-800">
+                    <option value="">-- Select Semester --</option>
+                    <option value="1">Semester 1</option>
+                    <option value="1">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+            </div>
+
+            <!-- Subject -->
+            <div>
+                <label class="font-semibold">Subject</label>
+                <select id="course" class="form-input-field text-gray-800">
+                    <option value="">-- Select Subject --</option>
+                </select>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label class="font-semibold">Status</label>
+                <select id="status" class="form-input-field text-gray-800">
+                    <option value="">All</option>
+                    <option value="answered">Answered</option>
+                    <option value="unanswered">Unanswered</option>
+                </select>
+            </div>
+        </div>
+
+    </div>    
+    <!-- Sub-Navigation / Dashboard Links -->
+    
+
+    <!-- START BUTTON -->
+    <div class="flex justify-center mb-8">
+        <button id="start-session-btn"
+            class="cta-button-blue bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-lg font-bold">
+            Start Practice Session
+        </button>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div id="practice-questions" class="hidden space-y-6"></div>
+
+</main>
+
+<!-- SCRIPT -->
+<script>
+const API_URL = "http://localhost:3000/api";
+
+const branchSelect = document.getElementById("branch");
+const semesterSelect = document.getElementById("semester");
+const courseSelect = document.getElementById("course");
+const statusSelect = document.getElementById("status");
+const questionContainer = document.getElementById("practice-questions");
+
+/* Load subjects based on department + semester */
+async function loadSubjects() {
+    const departmentId = branchSelect.value;
+    const semester = semesterSelect.value;
+
+    courseSelect.innerHTML = `<option value="">Loading subjects...</option>`;
+
+    if (!departmentId || !semester) {
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `${API_URL}/subjects?department_id=${departmentId}&semester=${semester}`
+        );
+        const data = await res.json();
+
+        courseSelect.innerHTML = `<option value="">-- Select Subject --</option>`;
+
+        data.subjects.forEach(sub => {
+            const opt = document.createElement("option");
+            opt.value = sub.subject_name; // EXACT DB VALUE
+            opt.textContent = sub.subject_name;
+            courseSelect.appendChild(opt);
+        });
+
+    } catch (err) {
+        console.error("Error loading subjects", err);
+        courseSelect.innerHTML = `<option value="">Error loading subjects</option>`;
+    }
+}
+
+branchSelect.addEventListener("change", loadSubjects);
+semesterSelect.addEventListener("change", loadSubjects);
+
+/* Load practice questions */
+document.getElementById("start-session-btn")
+    .addEventListener("click", loadPracticeQuestions);
+
+async function loadPracticeQuestions() {
+    const course = courseSelect.value;
+    const status = statusSelect.value;
+
+    console.log("Practice filters:", { course, status });
+
+    if (!course) {
+        alert("Please select a subject");
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `${API_URL}/practice/questions?course=${encodeURIComponent(course)}&status=${status}`
+        );
+        const data = await res.json();
+
+        renderQuestions(data.questions);
+
+    } catch (err) {
+        console.error("Failed to load practice questions", err);
+    }
+}
+
+/* Render questions */
+function renderQuestions(questions) {
+    questionContainer.innerHTML = "";
+    questionContainer.classList.remove("hidden");
+
+    if (!questions || questions.length === 0) {
+        questionContainer.innerHTML = `
+            <p class="text-center text-gray-600">
+                No questions found for this filter.
+            </p>`;
+        return;
+    }
+
+    questions.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "bg-white p-6 rounded-xl shadow-md";
+
+        card.innerHTML = `
+            <h3 class="text-lg font-bold">${q.question}</h3>
+            <p class="text-sm text-gray-500">${q.course}</p>
+
+            <textarea id="answer-${q.doubt_id}"
+                class="w-full mt-3 border-2 rounded-lg p-2"
+                placeholder="Write your answer for practice..."></textarea>
+
+            <button onclick="submitPracticeAnswer(${q.doubt_id})"
+                class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg">
+                Submit for Review
+            </button>
+        `;
+
+        questionContainer.appendChild(card);
+    });
+}
+async function submitPracticeAnswer(doubtId) {
+    console.log("Submit clicked for doubt:", doubtId);
+
+    const user = JSON.parse(localStorage.getItem("doubtoutUser"));
+    if (!user || user.role !== "student") {
+        alert("Please login as a student");
+        return;
+    }
+
+    const textarea = document.getElementById(`answer-${doubtId}`);
+
+    if (!textarea) {
+        alert("Textarea not found (BUG)");
+        return;
+    }
+
+    const answerText = textarea.value.trim();
+
+    if (!answerText) {
+        alert("Answer cannot be empty");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/practice/answer`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                doubt_id: doubtId,
+                student_id: user.user_id,
+                answer_text: answerText
+            })
+        });
+
+        const data = await res.json();
+        console.log("Server response:", data);
+
+        if (!res.ok) {
+            alert(data.error || "Submission failed");
+            return;
+        }
+
+        alert("✅ Answer submitted for professor review");
+        textarea.value = "";
+
+    } catch (err) {
+        console.error("Practice submit error:", err);
+        alert("Server error while submitting answer");
+    }
+}
+
+</script>
+
+</body>
+</html>

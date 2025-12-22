@@ -133,113 +133,92 @@
 
     
     <!-- JavaScript for Data Management and Rendering -->
-    <script>
-        // Mock data for professor's own answers
-        let professorAnswers = [];
+   <script>
+const API = "http://localhost:3000/api";
 
-        document.addEventListener('DOMContentLoaded', loadProfessorAnswers);
+let professorAnswers = [];
 
-        const listContainer = document.getElementById('answers-list');
-        const emptyState = document.getElementById('empty-state');
-        const courseFilter = document.getElementById('course-filter');
-        const statusFilter = document.getElementById('status-filter');
+const listContainer = document.getElementById("answers-list");
+const emptyState = document.getElementById("empty-state");
+const courseFilter = document.getElementById("course-filter");
+const statusFilter = document.getElementById("status-filter");
 
-        /**
-         * Generates the HTML card for a single professor answer.
-         */
-        function createAnswerCard(item) {
-            const statusMap = {
-                'Published': { color: 'bg-green-100 text-green-800 border-green-500', icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />' },
-                'Draft': { color: 'bg-gray-100 text-gray-700 border-gray-500', icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />' },
-                'Needs Update': { color: 'bg-yellow-100 text-yellow-800 border-yellow-500', icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.398 16c-.77 1.333.192 3 1.732 3z" />' }
-            };
-            const statusInfo = statusMap[item.status] || statusMap['Draft'];
-            const borderColorClass = statusInfo.color.split(' ').pop();
+/* ---------------- EDIT REDIRECT ---------------- */
+window.editAnswer = function (answerId) {
+    window.location.href = `edit_answer.html?answer_id=${answerId}`;
+};
 
-            return `
-                <div id="prof-answer-${item.id}" class="answer-item bg-white p-4 rounded-lg shadow-md border-l-4 ${borderColorClass} flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <!-- Left Section: Details -->
-                    <div class="md:flex-grow pr-4 mb-3 md:mb-0">
-                        <h3 class="text-xl font-semibold text-gray-800">${item.q_title}</h3>
-                        <p class="text-sm text-gray-500 mt-1">
-                            <span class="font-medium text-green-600">${item.course}</span> | Answered: ${item.answered_at}
-                        </p>
-                        <div class="flex items-center space-x-3 mt-2">
-                             <span class="inline-flex items-center px-3 py-0.5 text-xs font-medium rounded-full ${statusInfo.color.replace(/border-\w+-\d+/g, '')}">
-                                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">${statusInfo.icon}</svg>
-                                Status: ${item.status}
-                            </span>
-                            <span class="text-xs text-gray-500 flex items-center">
-                                <svg class="h-4 w-4 mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                ${item.views.toLocaleString()} Views
-                            </span>
-                        </div>
-                    </div>
+/* ---------------- CREATE CARD ---------------- */
+function createAnswerCard(item) {
+    return `
+        <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500">
+            <h3 class="text-xl font-semibold text-gray-800">
+                ${item.q_title}
+            </h3>
 
-                    <!-- Right Section: Actions -->
-                    <div class="flex space-x-2 flex-shrink-0">
-                        <button onclick="simulateEdit(${item.id})"
-                            title="Edit Answer"
-                            class="p-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-150 flex items-center">
-                            <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
+            <p class="text-sm text-gray-500 mt-1">
+                <span class="font-medium text-green-600">${item.course}</span>
+                | Answered on ${item.answered_at}
+            </p>
 
-        /**
-         * Filters and renders the answers based on course and status selection.
-         */
-        window.filterAnswers = function() {
-            const selectedCourse = courseFilter.value;
-            const selectedStatus = statusFilter.value;
+            <div class="mt-3 flex justify-between items-center">
+                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                    Published
+                </span>
 
-            const filteredItems = professorAnswers.filter(item => {
-                const courseMatch = selectedCourse === '' || item.course === selectedCourse;
-                const statusMatch = selectedStatus === '' || item.status === selectedStatus;
-                return courseMatch && statusMatch;
-            });
+                <button
+                    onclick="editAnswer(${item.id})"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm">
+                    Edit
+                </button>
+            </div>
+        </div>
+    `;
+}
 
-            renderAnswers(filteredItems);
-        };
+/* ---------------- RENDER ---------------- */
+function renderAnswers(items) {
+    listContainer.innerHTML = "";
 
-        /**
-         * Renders the list of professor answers.
-         */
-        function renderAnswers(items) {
-            listContainer.innerHTML = '';
+    if (items.length === 0) {
+        listContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+    }
 
-            if (items.length === 0) {
-                listContainer.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                return;
-            }
+    listContainer.classList.remove("hidden");
+    emptyState.classList.add("hidden");
 
-            listContainer.classList.remove('hidden');
-            emptyState.classList.add('hidden');
+    items.forEach(item => {
+        listContainer.innerHTML += createAnswerCard(item);
+    });
+}
 
-            items.forEach(item => {
-                listContainer.innerHTML += createAnswerCard(item);
-            });
-        }
-        async function loadProfessorAnswers() {
+/* ---------------- FILTER ---------------- */
+window.filterAnswers = function () {
+    const selectedCourse = courseFilter.value;
+    const selectedStatus = statusFilter.value;
+
+    const filtered = professorAnswers.filter(a =>
+        (!selectedCourse || a.course === selectedCourse) &&
+        (!selectedStatus || a.status === selectedStatus)
+    );
+
+    renderAnswers(filtered);
+};
+
+/* ---------------- LOAD DATA ---------------- */
+async function loadProfessorAnswers() {
     const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
 
     if (!professor || professor.role !== "professor") {
-        window.location.href = "login.html";
+        window.location.href = "login1.html";
         return;
     }
 
     try {
         const res = await fetch(
-            `http://localhost:3000/api/professor/answers/${professor.user_id}`
+            `${API}/professor/answers/${professor.user_id}`
         );
         const data = await res.json();
 
@@ -247,9 +226,8 @@
             id: a.answer_id,
             q_title: a.question,
             course: a.course,
-            status: "Published", // all submitted answers are published
-            answered_at: new Date(a.answered_at).toLocaleDateString(),
-            views: 0 // can be added later
+            status: "Published",
+            answered_at: new Date(a.answered_at).toLocaleDateString()
         }));
 
         filterAnswers();
@@ -258,15 +236,9 @@
     }
 }
 
-        /**
-         * Simulates starting the edit process for an answer.
-         */
-        window.simulateEdit = function(id) {
-            const item = professorAnswers.find(i => i.id === id);
-            if (item) {
-                alert(`Starting edit process for: "${item.q_title}" (ID: ${id})\n\nAction: Navigate to a rich text editor to modify and save the expert answer.`);
-            }
-        };
-    </script>
+document.addEventListener("DOMContentLoaded", loadProfessorAnswers);
+</script>
+
+
 </body>
 </html>
