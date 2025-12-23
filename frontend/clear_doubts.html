@@ -112,7 +112,7 @@ async function loadDoubts() {
     const professor = JSON.parse(localStorage.getItem("doubtoutUser"));
 
     if (!professor || professor.role !== "professor") {
-        window.location.href = "login.html";
+        window.location.href = "login1.html";
         return;
     }
 
@@ -175,12 +175,9 @@ function renderDoubts(items) {
 }
 
 window.filterDoubts = function () {
-    const selectedCourse = courseFilter.value;
-    const filtered = unansweredDoubts.filter(
-        d => !selectedCourse || d.course === selectedCourse
-    );
-    renderDoubts(filtered);
+    renderDoubts(unansweredDoubts);
 };
+
 
 window.simulateAnswer = function (id) {
     const modal = document.createElement("div");
