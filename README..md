@@ -1,16 +1,16 @@
-DoubtOut – University Doubt Solving Platform
+#DoubtOut – University Doubt Solving Platform
 
-DoubtOut is a full-stack web application designed to streamline academic doubt resolution within a university ecosystem. The platform enables students to post academic queries and allows professors to respond efficiently through a secure, role-based system.
+###DoubtOut is a full-stack web application designed to streamline academic doubt resolution within a university ecosystem. The platform enables students to post academic queries and allows professors to respond efficiently through a secure, role-based system.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-OVERVIEW
-
+##OVERVIEW
+###
   ->Traditional doubt-solving methods in universities often lack structure and accessibility. DoubtOut provides a centralized digital platform to:
   ->Enable structured question posting
   ->Ensure secure authentication
   ->Maintain role-based authorization
   ->Store and retrieve queries efficiently
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-KEY FEATURES
+##KEY FEATURES
 
   -> JWT-based Authentication (Login & Signup)
   -> Role-Based Access Control (Student / Professor)
@@ -22,7 +22,7 @@ KEY FEATURES
   -> Deployed Full-Stack Application
   
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-TECH STACK
+##TECH STACK
 
 -> Frontend
       HTML5
@@ -42,7 +42,7 @@ TECH STACK
       Postman (API Testing)
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-SYSTEM ARCHITECTURE
+##SYSTEM ARCHITECTURE
 
   ->RESTful APIs handle client-server communication
   ->JWT middleware secures protected routes
@@ -50,7 +50,7 @@ SYSTEM ARCHITECTURE
   ->Relational database schema with normalized tables
   ->Structured error-handling middleware
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
- MY CONTRIBUTION
+ ##MY CONTRIBUTION
 
 This project was developed independently as part of university coursework.
 I was responsible for:
@@ -59,7 +59,7 @@ I was responsible for:
   ->Authentication & authorization logic
   ->Database schema design
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-FUTURE ENHANCEMENTS
+##FUTURE ENHANCEMENTS
 
   ->Real-time notifications
   ->Upvote and ranking system
@@ -67,7 +67,7 @@ FUTURE ENHANCEMENTS
   ->Cloud deployment with CI/CD
   ->UI enhancement using modern frameworks
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-LEARNING OUTCOMES
+##LEARNING OUTCOMES
 
 Through this project, I strengthened my understanding of:
     ->Full-stack architecture
@@ -76,6 +76,6 @@ Through this project, I strengthened my understanding of:
     ->Database schema design
     ->Backend validation and middleware usage
     ->Deployment workflows
-Deployment and environment configuration
+    ->Deployment and environment configuration
 
 API testing and debugging
